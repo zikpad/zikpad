@@ -6,13 +6,14 @@ let win = null
 app.on('ready', () => {
     win = new BrowserWindow({
         width: 600,
-        height: 200,
+        height: 400,
         //   icon: 'assets/zds.png',
         title: 'Musicscratch',
         movable: false
     });
 
     win.setMenu(null) //remove menu
-    win.loadFile('index.html')
+    win.loadFile('dist/index.html')
+    
 });
 
