@@ -1,7 +1,7 @@
 export class Layout {
-    static NOTERADIUS = 12;
+    static NOTERADIUS = 8;
     static WIDTH = 800;
-    static HEIGHT = 400;
+    static HEIGHT = 200;
     static BASELINE = Layout.HEIGHT * 3 / 4;
     static RYTHMY = Layout.getY(18);
     static RYTHMLINESSEP = 8;

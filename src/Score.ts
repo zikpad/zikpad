@@ -9,8 +9,8 @@ export class Score {
 
     _draw() {
         clear();
-        drawLines();
         for (let note of this.notes) note.draw();
+        drawLines();
     }
 
     addNote(note) {
