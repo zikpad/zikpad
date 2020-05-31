@@ -1,14 +1,19 @@
 export class Layout {
-    static NOTERADIUS = 16;
+    static NOTERADIUS = 12;
+    static WIDTH = 800;
+    static HEIGHT = 400;
+    static BASELINE = Layout.HEIGHT * 3 / 4;
+    static RYTHMY = Layout.getY(18);
+    static RYTHMLINESSEP = 8;
 
     static getNoteRadius(): number {
         return Layout.NOTERADIUS;
     }
     static getY(pitch) {
-        return 200 - Layout.NOTERADIUS*pitch;
+        return this.BASELINE - Layout.NOTERADIUS*pitch;
     }
 
     static getPitch(y) {
-        return Math.round((200-y)/Layout.NOTERADIUS);
+        return Math.round((this.BASELINE-y)/Layout.NOTERADIUS);
     }
 }

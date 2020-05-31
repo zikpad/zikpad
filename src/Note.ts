@@ -1,36 +1,41 @@
 import { Layout } from "./Layout.js";
+import { Drawing } from "./Drawing.js";
 
 
 export class Note {
     x: number;
     pitch: number;
-    private svgCircle;
+    private svgCircle: SVGCircleElement;
 
     constructor(x: number, pitch: number) {
         this.x = x, this.pitch = pitch;
-        this.svgCircle = newCircle(this.x, Layout.getY(this.pitch),
+        this.svgCircle = Drawing.circle(this.x, this.y,
             Layout.getNoteRadius());
-        this.svgCircle.note = this;
-        this.svgCircle.addEventListener('mousedown', startDrag);
-        this.svgCircle.addEventListener('mousemove', drag);
-        this.svgCircle.addEventListener('mouseup', endDrag);
-        this.svgCircle.addEventListener('mouseleave', endDrag);
+        (<any> this.svgCircle).note = this;
     };
 
     draw() {
         document.getElementById("svg").appendChild(this.svgCircle);
     }
 
+    set duration(d) {
+        if(d < 0.5)
+            this.svgCircle.setAttribute('fill', "black");
+        else
+            this.svgCircle.setAttribute('fill', "white");
+    }
     update(x: number, pitch: number) {
         this.x = x, this.pitch = pitch;
-        this.svgCircle.setAttribute('cx', x);
-        this.svgCircle.setAttribute('cy', Layout.getY(this.pitch));
+        this.svgCircle.setAttribute('cx', x.toString());
+        this.svgCircle.setAttribute('cy', this.y.toString());
     }
 
+    get y() {
+        return  Layout.getY(this.pitch);
+    }
 
     getPitchName() {
         let octave = 0;
-        console.log(this.pitch)
         switch(this.pitch % 7) {
             case 0: return "c";
             case 1: return "d";
@@ -47,43 +52,9 @@ export class Note {
 
 
 
-function newCircle(x, y, r) {
-    var aCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    aCircle.setAttribute('cx', x);
-    aCircle.setAttribute('cy', y);
-    aCircle.setAttribute('r', r);
-    aCircle.setAttribute('stroke', "black");
-    aCircle.setAttribute('stroke-width', "1");
-    return aCircle;
-}
 
 
 
-var selectedElement, offset;
-function startDrag(evt) {
-    console.log("startdrag")
-    selectedElement = evt.target;
-    offset = { x: evt.clientX, y: evt.clientY };
-    offset.x -= parseFloat(selectedElement.getAttributeNS(null, "cx"));
-    offset.y -= parseFloat(selectedElement.getAttributeNS(null, "cy"));
 
-}
-
-
-function drag(evt) {
-    if (selectedElement) {
-        evt.preventDefault();
-        var coord = { x: evt.clientX, y: evt.clientY };
-        selectedElement.note.update(coord.x - offset.x,
-            Layout.getPitch(coord.y - offset.y));
-        (<any> document.getElementById("svg")).score.update();
-    }
-}
-
-
-
-function endDrag(evt) {
-    selectedElement = null;
-}
 
 

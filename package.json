@@ -15,7 +15,8 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "@types/vexflow": "^1.2.35",
+    "@types/vexflow": "^1.2.36",
+    "robotjs": "^0.6.0",
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.3",
     "vexflow": "^3.0.9"
