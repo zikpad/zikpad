@@ -1,10 +1,12 @@
 import { Note } from "./Note.js";
 import { Layout } from "./Layout.js";
 import { Score } from "./Score.js";
+import { Voice } from "./Voice.js";
 
 export class InteractionScore {
     selection: Note[];
-    score: Score;
+    readonly score: Score;
+    readonly currentVoice: Voice;
 
     selectedElement: Note;
     offset;
@@ -12,15 +14,16 @@ export class InteractionScore {
     updateAsked = false;
 
 
-    constructor(score) {
+    constructor(score: Score) {
         this.score = score;
+        this.currentVoice = this.score.voices[0];
         score.update();
+        
         this.setup();
     }
 
 
     update() {
-        console.log("update" + this.score.notes.length)
         this.score.update();
         this.setup();
         this.updateAsked = false;
@@ -41,11 +44,10 @@ export class InteractionScore {
 
         document.getElementById("svgBackground").addEventListener("click", (evt) => {
             console.log("click")
-            this.score.addNote(new Note(evt.x, Layout.getPitch(evt.y)));
+            this.currentVoice.addNote(new Note(evt.x, Layout.getPitch(evt.y)));
             this.update();
         });
 
-        (<any>document.getElementById("svg")).score = this;
     }
 
 

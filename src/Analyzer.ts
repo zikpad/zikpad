@@ -1,13 +1,14 @@
 import { Drawing } from './Drawing.js';
-import { Score, TimeStep } from "./Score.js";
+import { Voice, TimeStep } from "./Voice.js";
 import { Note } from "./Note.js";
 import { Layout } from "./Layout.js";
 
 export class Analyzer {
-    score: Score;
-    analyze(score: Score) {
-        this.score = score;
-        this.computeTime(this.score.timeSteps);
+    voice: Voice;
+    
+    analyze(voice: Voice) {
+        this.voice = voice;
+        this.computeTime(this.voice.timeSteps);
         this._draw();
     }
 
@@ -16,57 +17,84 @@ export class Analyzer {
         if (timeSteps.length == 0) return;
 
         for (let ts of timeSteps) {
-            ts.t = (ts.x - timeSteps[0].x) / (Layout.WIDTH - timeSteps[0].x);
+            ts.t = (ts.x - timeSteps[0].x) / (Layout.WIDTH - Layout.XBEGIN);
         }
 
-
+        let t = 0;
         for (let i = 0; i < timeSteps.length; i++) {
             if (i < timeSteps.length - 1)
                 timeSteps[i].duration = getDuration(timeSteps[i + 1].t - timeSteps[i].t);
             else
                 timeSteps[i].duration = getDuration(1 - timeSteps[i].t);
+
+            t += timeSteps[i].duration;
+            timeSteps[i].t = t;
+
         }
     }
 
 
+    
 
     _draw() {
-        function drawRythmLine(timeStep) {
+        function drawRythmLine(timeStep: TimeStep) {
             if (timeStep.duration >= 0.25)
                 return;
 
-            Drawing.lineThick(timeStep.x, Layout.RYTHMY, timeStep.x + 10, Layout.RYTHMY);
+            Drawing.lineThick(timeStep.xLine, Layout.RYTHMY, timeStep.xLine + Layout.RYTHMX, Layout.RYTHMY);
 
-            if (timeStep.duration >= 0.25 / 2) return;
+            if (timeStep.duration > 0.25 / 4) return;
 
-            Drawing.lineThick(timeStep.x, Layout.RYTHMY + Layout.RYTHMLINESSEP, timeStep.x + 10, Layout.RYTHMY + Layout.RYTHMLINESSEP);
+            Drawing.lineThick(timeStep.xLine, Layout.RYTHMY + Layout.RYTHMLINESSEP, timeStep.xLine + Layout.RYTHMX, Layout.RYTHMY + Layout.RYTHMLINESSEP);
 
-            if(timeStep.duration >= 0.25/4) return;
+            if (timeStep.duration > 0.25 / 8) return;
         }
 
-        for (let timeStep of this.score.timeSteps) {
+        for (let timeStep of this.voice.timeSteps) {
             if (timeStep.duration < 1)
-                Drawing.line(timeStep.x, Layout.getY(10), timeStep.x, Layout.RYTHMY);
+                Drawing.line(timeStep.xLine, timeStep.yDown, timeStep.xLine, Layout.RYTHMY);
 
             drawRythmLine(timeStep);
 
-            if(timeStep.isDot())
-                for(let note of timeStep.notes)
-                    Drawing.circle(note.x + Layout.NOTERADIUS*3/2, note.y, 3);
+            if (timeStep.isDot())
+                for (let note of timeStep.notes)
+                    Drawing.circle(note.x + Layout.NOTERADIUS * 3 / 2, note.y, 3);
 
+        }
+
+        for(let i = 0; i < this.voice.timeSteps.length; i++) {
+            if(this.voice.isTrioletStartingFrom(i))
+                Drawing.text((this.voice.timeSteps[i].x + this.voice.timeSteps[i+2].x)/2, Layout.RYTHMYNOLET, "3");
         }
     }
 
     getLilypond(): string {
         let s = "";
-        for (let i = 0; i < this.score.timeSteps.length; i++) {
-            s += this.score.timeSteps[i].getPitchs();
-            s += getDurationLilypond(this.score.timeSteps[i].duration);
+        let i = 0;
+        while (i < this.voice.timeSteps.length) {
+            if (this.voice.isTrioletStartingFrom(i)) {
+                s += `\\tuplet 3/2 { ${this.voice.timeSteps[i].getPitchs()}8 ${this.voice.timeSteps[i + 1].getPitchs()} ${this.voice.timeSteps[i + 2].getPitchs()}} `;
+                i += 3;
+            }
+            else {
+                s += this.voice.timeSteps[i].getPitchs();
+                s += getDurationLilypond(this.voice.timeSteps[i].duration);
 
-            if(this.score.timeSteps[i].isDot())
-                s += ".";
-            s += " ";
+                if (this.voice.timeSteps[i].isDot())
+                    s += ".";
+                s += " ";
+                i++;
+
+            }
         }
+
+
+
+        /* s += " ";
+         for (let timestep of this.score.timeSteps) {
+             s += `${timestep._duration} `;
+         }*/
+
         return s;
     }
 }
@@ -87,7 +115,7 @@ function getDuration(dt: number): number {
         }
     }
 
-    let possibleValues = [0.25/4, 0.25 / 2, 0.25, 0.5, 0.75, 0.25/3, 1, 0.75/2, 0.75/4];
+    let possibleValues = [0.25 / 4, 0.25 / 3, 0.25 / 2, 0.25, 0.5, 0.75, 0.25 / 3, 1, 0.75 / 2, 0.75 / 4];
 
     for (let v of possibleValues)
         test(v);

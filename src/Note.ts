@@ -2,6 +2,8 @@ import { Layout } from "./Layout.js";
 import { Drawing } from "./Drawing.js";
 
 
+type Alteration = "normal" | "flat" | "sharp";
+
 export class Note {
     x: number;
     pitch: number;

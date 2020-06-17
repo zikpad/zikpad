@@ -1,4 +1,15 @@
 export class Drawing {
+    static text(x: number, y: number, s: string) {
+        let aText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        aText.setAttribute("x", ""+x);
+        aText.setAttribute("y", ""+y);
+        aText.innerHTML = s;
+        aText.setAttribute('stroke', "black");
+        aText.setAttribute('fill', "black");
+        aText.setAttribute('stroke-width', "1");
+        document.getElementById("svg").appendChild(aText);
+        return aText;
+    }
     static circle(x, y, r) {
         let aCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         aCircle.setAttribute('cx', x);
@@ -19,6 +30,7 @@ export class Drawing {
         aLine.setAttribute('y2', y2);
         aLine.setAttribute('stroke', "lightgray");
         aLine.setAttribute('stroke-width', "1");
+        aLine.addEventListener("mousedown", (evt) => evt.preventDefault());
         document.getElementById("svg").appendChild(aLine);
         return aLine;
     }
@@ -30,7 +42,8 @@ export class Drawing {
         aLine.setAttribute('x2', x2);
         aLine.setAttribute('y2', y2);
         aLine.setAttribute('stroke', "black");
-        aLine.setAttribute('stroke-width', "2");
+        aLine.addEventListener("mousedown", (evt) => evt.preventDefault());
+        aLine.setAttribute('stroke-width', "3");
         document.getElementById("svg").appendChild(aLine);
         return aLine;
     }
