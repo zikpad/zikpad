@@ -48,14 +48,14 @@ export class Drawing {
         return aLine;
     }
 
-    static lineThick(x1, y1, x2, y2) {
+    static lineRythm(x1, y1, x2, y2) {
         var aLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         aLine.setAttribute('x1', x1);
         aLine.setAttribute('y1', y1);
         aLine.setAttribute('x2', x2);
         aLine.setAttribute('y2', y2);
         aLine.setAttribute('stroke', "black");
-        aLine.setAttribute('stroke-width', "5");
+        aLine.setAttribute('stroke-width', "8");
         document.getElementById("svg").appendChild(aLine);
         return aLine;
     }

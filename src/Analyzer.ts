@@ -5,7 +5,7 @@ import { Layout } from "./Layout.js";
 
 export class Analyzer {
     voice: Voice;
-    
+
     analyze(voice: Voice) {
         this.voice = voice;
         this.computeTime(this.voice.timeSteps);
@@ -17,7 +17,7 @@ export class Analyzer {
         if (timeSteps.length == 0) return;
 
         for (let ts of timeSteps) {
-            ts.t = (ts.x - timeSteps[0].x) / (Layout.WIDTH - Layout.XBEGIN);
+            ts.t = (ts.x - timeSteps[0].x) / (Layout.WIDTHONE - Layout.XBEGIN);
         }
 
         let t = 0;
@@ -34,27 +34,31 @@ export class Analyzer {
     }
 
 
-    
+
 
     _draw() {
         function drawRythmLine(timeStep: TimeStep) {
             if (timeStep.duration >= 0.25)
                 return;
 
-            Drawing.lineThick(timeStep.xLine, Layout.RYTHMY, timeStep.xLine + Layout.RYTHMX, Layout.RYTHMY);
+            Drawing.lineRythm(timeStep.xLine, timeStep.yRythm, timeStep.xLine + Layout.RYTHMX, timeStep.yRythm);
 
             if (timeStep.duration > 0.25 / 4) return;
 
-            Drawing.lineThick(timeStep.xLine, Layout.RYTHMY + Layout.RYTHMLINESSEP, timeStep.xLine + Layout.RYTHMX, Layout.RYTHMY + Layout.RYTHMLINESSEP);
+            Drawing.lineRythm(timeStep.xLine, timeStep.yRythm + Layout.RYTHMLINESSEP, timeStep.xLine + Layout.RYTHMX, timeStep.yRythm + Layout.RYTHMLINESSEP);
 
             if (timeStep.duration > 0.25 / 8) return;
         }
 
         for (let timeStep of this.voice.timeSteps) {
-            if (timeStep.duration < 1)
-                Drawing.line(timeStep.xLine, timeStep.yDown, timeStep.xLine, Layout.RYTHMY);
 
-            drawRythmLine(timeStep);
+            if (!timeStep.isSilence()) {
+                if (timeStep.duration < 1)
+                    Drawing.line(timeStep.xLine, timeStep.yDown, timeStep.xLine, timeStep.yRythm);
+
+                drawRythmLine(timeStep);
+
+            }
 
             if (timeStep.isDot())
                 for (let note of timeStep.notes)
@@ -62,9 +66,10 @@ export class Analyzer {
 
         }
 
-        for(let i = 0; i < this.voice.timeSteps.length; i++) {
-            if(this.voice.isTrioletStartingFrom(i))
-                Drawing.text((this.voice.timeSteps[i].x + this.voice.timeSteps[i+2].x)/2, Layout.RYTHMYNOLET, "3");
+        for (let i = 0; i < this.voice.timeSteps.length; i++) {
+            if (this.voice.isTrioletStartingFrom(i))
+                Drawing.text((this.voice.timeSteps[i].x + this.voice.timeSteps[i + 2].x) / 2, 
+                this.voice.timeSteps[i].yRythm - 2, "3");
         }
     }
 

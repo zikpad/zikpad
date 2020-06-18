@@ -3,10 +3,17 @@ import { Layout } from './Layout.js';
 import { Voice } from './Voice.js';
 
 export class Score {
-    voices: Voice[] = [new Voice()];
+    voices: Voice[] = [];
 
+
+    constructor() {
+        for (let c of Voice.voiceColors)
+            this.voices.push(new Voice(c));
+    }
     _draw() {
         clear();
+
+
         for (let voice of this.voices) voice.draw();
         drawLines();
         drawLandMark();
@@ -42,11 +49,16 @@ function drawLines() {
         Drawing.line(0, y, Layout.WIDTH, y);
     }
 
+    for (let t = 0; t < 30; t++) {
+        let x = Layout.getX(t) - 2 * Layout.NOTERADIUS;
+        Drawing.line(x, Layout.getY(-10), x, Layout.getY(10));
+    }
+
 }
 
 
 function drawLandMark() {
-    for (let t = 0; t < 1; t += 0.25) {
+    for (let t = 0; t < 50; t += 0.25) {
         const x = Layout.getX(t);
         Drawing.lineLight(x, 0, x, Layout.LANDMARKHEIGHT);
     }
