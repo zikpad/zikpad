@@ -1,3 +1,4 @@
+import { Player } from './Player.js';
 import { Note } from "./Note.js";
 import { Layout } from "./Layout.js";
 import { Score } from "./Score.js";
@@ -135,6 +136,8 @@ export class InteractionScore {
 
     updateAsked = false;
 
+    player: Player = undefined;
+
 
     constructor(score: Score) {
         this.score = score;
@@ -151,6 +154,23 @@ export class InteractionScore {
 
         }
 
+        document.getElementById("playButton").addEventListener("click",
+            (evt) => {
+                console.log("button play")
+                if (this.player == undefined) {
+                    this.player = new Player(this.score);
+                    document.getElementById("playButton").innerHTML = "stop!";
+                }
+                    
+                else {
+                    this.player.stop();
+                    this.player = undefined;
+                    document.getElementById("playButton").innerHTML = "play!";
+                }
+                    
+            }
+        );
+
         this.setup();
     }
 
@@ -162,8 +182,6 @@ export class InteractionScore {
     }
 
     setup() {
-        document.getElementById("playButton").addEventListener("click", (evt) => alert("not be implemented! Come bac in few days!"));
-
         let circles = document.getElementsByTagName("circle");
 
         for (let i = 0; i < circles.length; i++) {

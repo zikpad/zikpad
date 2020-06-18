@@ -5,8 +5,25 @@ import { Drawing } from "./Drawing.js";
 type Alteration = "" | "b" | "#" | "x" | "bb";
 
 export class Note {
+    get midiPitch() {
+        let f = () => {
+            let x = this.pitch % 7;
+            if(x < 0) x+= 7;
+            switch (x) {
+                case 0: return 0;
+                case 1: return 2;
+                case 2: return 4;
+                case 3: return 5;
+                case 4: return 7;
+                case 5: return 9;
+                case 6: return 11;
+            }
+        }
+
+        return 62 + 12 * Math.floor(this.pitch / 7) + f();
+    }
     delete() {
-      
+
     }
 
 
@@ -59,12 +76,12 @@ export class Note {
                 this.svgCircle.setAttribute('stroke', "black");
                 this.svgCircle.setAttribute('fill', this.color);
             }
-                
+
             else {
                 this.svgCircle.setAttribute('fill', "white");
                 this.svgCircle.setAttribute('stroke', this.color);
             }
-                
+
         }
     }
 

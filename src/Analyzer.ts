@@ -27,8 +27,9 @@ export class Analyzer {
             else
                 timeSteps[i].duration = getDuration(1 - timeSteps[i].t);
 
-            t += timeSteps[i].duration;
             timeSteps[i].t = t;
+            t += timeSteps[i].duration;
+
 
         }
     }
@@ -68,8 +69,8 @@ export class Analyzer {
 
         for (let i = 0; i < this.voice.timeSteps.length; i++) {
             if (this.voice.isTrioletStartingFrom(i))
-                Drawing.text((this.voice.timeSteps[i].x + this.voice.timeSteps[i + 2].x) / 2, 
-                this.voice.timeSteps[i].yRythm - 2, "3");
+                Drawing.text((this.voice.timeSteps[i].x + this.voice.timeSteps[i + 2].x) / 2,
+                    this.voice.timeSteps[i].yRythm - 2, "3");
         }
     }
 
