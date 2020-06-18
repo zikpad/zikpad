@@ -1,8 +1,10 @@
 import { Drawing } from './Drawing.js';
 import { Layout } from './Layout.js';
 import { Voice } from './Voice.js';
+import { Note } from './Note.js';
 
 export class Score {
+    
     voices: Voice[] = [];
 
 
@@ -10,13 +12,20 @@ export class Score {
         for (let c of Voice.voiceColors)
             this.voices.push(new Voice(c));
     }
+
+    removeNote(note: Note) {
+        for (let voice of this.voices) voice.removeNote(note);
+    }
+
+
     _draw() {
         clear();
 
 
         for (let voice of this.voices) voice.draw();
-        drawLines();
         drawLandMark();
+        drawLines();
+        
     }
 
     update() {

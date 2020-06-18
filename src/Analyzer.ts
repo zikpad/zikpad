@@ -17,7 +17,7 @@ export class Analyzer {
         if (timeSteps.length == 0) return;
 
         for (let ts of timeSteps) {
-            ts.t = (ts.x - timeSteps[0].x) / (Layout.WIDTHONE - Layout.XBEGIN);
+            ts.t = Layout.getT(ts.x);
         }
 
         let t = 0;

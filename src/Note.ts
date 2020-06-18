@@ -5,13 +5,16 @@ import { Drawing } from "./Drawing.js";
 type Alteration = "" | "b" | "#" | "x" | "bb";
 
 export class Note {
+    delete() {
+      
+    }
 
 
     x: number;
     pitch: number;
     private silence: boolean = false;
     color: string = "black";
-    alteration: Alteration = "x";
+    alteration: Alteration = "";
 
     setColor(color: string) {
         this.color = color;
@@ -25,7 +28,7 @@ export class Note {
         this.x = x, this.pitch = pitch;
         this.svgCircle = Drawing.circle(this.x, this.y,
             Layout.getNoteRadius());
-        this.svtTextAlteration = Drawing.text(this.x - Layout.NOTERADIUS*2, this.y + Layout.NOTERADIUS/ 2, this.alteration);
+        this.svtTextAlteration = Drawing.text(this.x - Layout.NOTERADIUS * 2, this.y + Layout.NOTERADIUS / 2, this.alteration);
 
         (<any>this.svgCircle).note = this;
     };
@@ -48,13 +51,20 @@ export class Note {
     }
 
     set duration(d) {
-        if (this.isSilence())
-            this.svgCircle.setAttribute('fill', "white");
+        if (this.isSilence()) {
+            this.svgCircle.setAttribute('fill', this.color);
+        }
         else {
-            if (d < 0.5)
+            if (d < 0.5) {
+                this.svgCircle.setAttribute('stroke', "black");
                 this.svgCircle.setAttribute('fill', this.color);
-            else
+            }
+                
+            else {
                 this.svgCircle.setAttribute('fill', "white");
+                this.svgCircle.setAttribute('stroke', this.color);
+            }
+                
         }
     }
 
@@ -62,8 +72,8 @@ export class Note {
         this.x = x, this.pitch = pitch;
         this.svgCircle.setAttribute('cx', x.toString());
         this.svgCircle.setAttribute('cy', this.y.toString());
-        this.svtTextAlteration.setAttribute('x', (this.x - Layout.NOTERADIUS*2).toString());
-        this.svtTextAlteration.setAttribute('y', (this.y + Layout.NOTERADIUS/ 2).toString());
+        this.svtTextAlteration.setAttribute('x', (this.x - Layout.NOTERADIUS * 2).toString());
+        this.svtTextAlteration.setAttribute('y', (this.y + Layout.NOTERADIUS / 2).toString());
     }
 
     get y() {
