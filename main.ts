@@ -10,7 +10,22 @@ import { Layout } from "./src/Layout.js";
 //const { ipcRenderer } = require('electron')
 //const { ipcRenderer } = require('electron')
 
+try {
+  const ipc = require('electron').ipcRenderer;
+
+  ipc.on("new", () => load());
+  
+}
+catch(e) {
+  
+}
+
 window.onload = load;
+
+function resize() {
+  document.getElementById("svg-wrapper").style.height = (window.innerHeight - document.getElementById("palette").clientHeight - 16).toString();
+}
+
 
 function load() {
 
@@ -22,15 +37,18 @@ function load() {
     (<HTMLInputElement>document.getElementById("lilypond")).select());
   new InteractionScore(score);
 
+  window.onresize = resize;
+
+  resize();
   //https://ourcodeworld.com/articles/read/286/how-to-execute-a-python-script-and-retrieve-output-data-and-errors-in-node-js
   //-> does not work
 
   //https://blog.logrocket.com/electron-ipc-response-request-architecture-with-typescript/
 
-/*
-  document.getElementById("validate").addEventListener("click", () => {
-    KeyBoardTyping.write((<HTMLInputElement>document.getElementById("lilypond")).value);
-});*/
+  /*
+    document.getElementById("validate").addEventListener("click", () => {
+      KeyBoardTyping.write((<HTMLInputElement>document.getElementById("lilypond")).value);
+  });*/
 
 }
 

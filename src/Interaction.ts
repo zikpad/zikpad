@@ -125,18 +125,18 @@ const KeyEvent = {
 
 
 export class InteractionScore {
-    selection: Note[];
+    private selection: Note[];
     readonly score: Score;
-    currentVoice: Voice;
+    private currentVoice: Voice;
 
-    draggedElement: Note;
-    selectedElement: Note;
-    offset;
-    dragOccurred: boolean = false;
+    private draggedElement: Note;
+    private selectedElement: Note;
+    private offset;
+    private dragOccurred: boolean = false;
 
-    updateAsked = false;
+    private updateAsked = false;
 
-    player: Player = undefined;
+    private player: Player = undefined;
 
 
     constructor(score: Score) {
