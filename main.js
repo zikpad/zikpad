@@ -25,7 +25,8 @@ function openDocument() {
     let files = dialog.showOpenDialogSync({ title: "Open file", filters: [{ name: "Lilypond file", extensions: "ly" }] });
     filename = files[0];
     win.title = "Zikpad - " + filename;
-    fs.readFile(filename, 'utf8', (err, data) => win.webContents.send("new", filenameContent));
+    fs.readFile(filename, 'utf8', (err, data) => {
+        win.webContents.send("open", data)});
 }
 
 
@@ -51,7 +52,7 @@ function saveAsDocument() {
 
 app.on('ready', () => {
     ipcMain.on("typing", (event, arg) => { typing(arg) })
-
+    ipcMain.on("save", (event, arg) => { fs.writeFileSync(filename, arg) })
 
     win = new BrowserWindow({
         alwaysOnTop: false,
@@ -74,24 +75,13 @@ app.on('ready', () => {
                 { label: 'Open', click() { openDocument() } },
                 { label: 'Save', click() { saveDocument() } },
                 { label: 'Save As', click() { saveAsDocument() } },
-                {
-                    label: 'Exit', click() {
-                        app.quit()
-                    }
-                }
+                { label: 'Exit', click() { app.quit() } }
             ]
         }
     ])
 
-
     Menu.setApplicationMenu(menu);
     win.loadFile('dist/index.html')
-
-
-
-
-
-
 });
 
 

@@ -1,3 +1,4 @@
+import { Lilypond } from './src/Lilypond.js';
 //import Vex from 'vexflow';
 //const VF = Vex.Flow;
 
@@ -10,15 +11,7 @@ import { Layout } from "./src/Layout.js";
 //const { ipcRenderer } = require('electron')
 //const { ipcRenderer } = require('electron')
 
-try {
-  const ipc = require('electron').ipcRenderer;
 
-  ipc.on("new", () => load());
-  
-}
-catch(e) {
-  
-}
 
 window.onload = load;
 
@@ -29,10 +22,11 @@ function resize() {
 
 function load() {
 
+
+
   document.getElementById("svg").setAttribute("height", Layout.HEIGHT.toString());
 
   let score = new Score();
-  document.getElementById("clear").addEventListener("click", load);
   document.getElementById("lilypond").addEventListener("click", () =>
     (<HTMLInputElement>document.getElementById("lilypond")).select());
   new InteractionScore(score);
@@ -49,6 +43,21 @@ function load() {
     document.getElementById("validate").addEventListener("click", () => {
       KeyBoardTyping.write((<HTMLInputElement>document.getElementById("lilypond")).value);
   });*/
+
+  try {
+    const ipc = require('electron').ipcRenderer;
+
+    ipc.on("new", () => load());
+    ipc.on("open", (evt, data) => {
+      load();
+      Lilypond.getScore(score, data);
+      new InteractionScore(score);
+    });
+    ipc.on("save", () => ipc.send("save", Lilypond.getCode(score)));
+  }
+  catch (e) {
+
+  }
 
 }
 

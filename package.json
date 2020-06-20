@@ -1,7 +1,7 @@
 {
-  "name": "tutoriel-electron",
+  "name": "zikpad",
   "version": "1.0.0",
-  "description": "Une application pour explorer les possibilités d'Electron",
+  "description": "a simple tool for writing music",
   "main": "main.js",
   "scripts": {
     "test": "electron .",

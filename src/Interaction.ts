@@ -144,6 +144,7 @@ export class InteractionScore {
         this.currentVoice = this.score.voices[0];
         score.update();
 
+        document.getElementById("voiceButtonPalette").innerHTML = "";
         for (let i in Voice.voiceColors) {
             let b = document.createElement("button");
             b.classList.add("voiceButton");
