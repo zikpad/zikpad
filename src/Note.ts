@@ -38,7 +38,7 @@ export class Note {
         this.svgCircle.setAttribute('stroke', this.color);
     }
 
-    private svgCircle: SVGCircleElement;
+    public svgCircle: SVGCircleElement;
     private svtTextAlteration: SVGTextElement;
 
     constructor(x: number, pitch: number) {
@@ -99,7 +99,9 @@ export class Note {
 
     get pitchName(): string {
         let f = () => {
-            switch (this.pitch % 7) {
+            let i = this.pitch % 7;
+            if(i < 0) i += 7;
+            switch (i) {
                 case 0: return "c";
                 case 1: return "d";
                 case 2: return "e";
@@ -110,8 +112,8 @@ export class Note {
             }
             return "e";
         }
-        let octave = Math.floor(this.pitch / 7);
-        return f() + ((octave >= 0) ? "'".repeat(this.pitch / 7) : ",".repeat(this.pitch / 7));
+        let octave = Math.floor(this.pitch / 7)+1;
+        return f() + ((octave >= 0) ? "'".repeat(octave) : ",".repeat(-octave));
     }
 
 }

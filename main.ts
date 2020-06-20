@@ -12,7 +12,6 @@ import { Layout } from "./src/Layout.js";
 //const { ipcRenderer } = require('electron')
 
 
-
 window.onload = load;
 
 function resize() {
@@ -20,13 +19,11 @@ function resize() {
 }
 
 
+
+let score = new Score();
+
 function load() {
-
-
-
   document.getElementById("svg").setAttribute("height", Layout.HEIGHT.toString());
-
-  let score = new Score();
   document.getElementById("lilypond").addEventListener("click", () =>
     (<HTMLInputElement>document.getElementById("lilypond")).select());
   new InteractionScore(score);
@@ -34,15 +31,6 @@ function load() {
   window.onresize = resize;
 
   resize();
-  //https://ourcodeworld.com/articles/read/286/how-to-execute-a-python-script-and-retrieve-output-data-and-errors-in-node-js
-  //-> does not work
-
-  //https://blog.logrocket.com/electron-ipc-response-request-architecture-with-typescript/
-
-  /*
-    document.getElementById("validate").addEventListener("click", () => {
-      KeyBoardTyping.write((<HTMLInputElement>document.getElementById("lilypond")).value);
-  });*/
 
   try {
     const ipc = require('electron').ipcRenderer;

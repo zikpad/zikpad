@@ -51,7 +51,6 @@ export class Lilypond {
     static getCode(score: Score) {
         let lines = [];
         for (let i in score.voices) {
-            lines.push("%ZIKPAD voice " + i);
             for (let note of score.voices[i].notes) {
                 if (note.isSilence())
                     lines.push(`%ZIKPAD ${note.x} ${note.pitchName} silence`)
