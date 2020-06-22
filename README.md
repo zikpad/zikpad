@@ -1,10 +1,9 @@
-# Musicwriterpad
+# Zikpad
 
-Musicwriterpad is an idea of a software to help to write music in Lilypond. See 
-https://www.youtube.com/watch?v=uuk4u1xzcrg
+Zikpad is an open-source project to write music. The tool automatically detects the rhythm. It saves Lilypond files. You may try the tool here: https://zikpad.github.io/
 
 
-# install electron
+# Local installation and Compile
 
 https://zestedesavoir.com/tutoriels/996/vos-applications-avec-electron/
 Electron uses main.js in the main. The rest of the application is in Typescript.
@@ -18,24 +17,10 @@ sudo dnf install libXinerama-devel
 Problem of NODE_MODULE_VERSION 80 that should be 64 for an obscure reason.
 sudo dnf install node-gyp
 
-
-
-# Webpack
-
-npx webpack
-
-
-# Compile
-
 The command tsc compiles all *.ts (for instance main.ts).
 
 
 
-
-# Vexflow
-
-At the beginning, I wanted to use Vexflow to display musical elements but I had difficulties to give custom positions to the different object. However, Vexflow is very nice. You may find some help here:
-https://www.javascripting.com/view/vexflow
 
 
 
