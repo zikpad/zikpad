@@ -39,7 +39,6 @@ https://www.javascripting.com/view/vexflow
 
 
 
-# Roadmap
-- add robotjs to directly write in the software you want
-- add the support of rests :)
-- make a packaging
+# Generate the packages
+ npm run create-installer-win
+ npm run create-debian-installer

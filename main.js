@@ -16,6 +16,7 @@ let filename = undefined;
 
 function newDocument() {
     filename = undefined;
+    win.title = "Zikpad - (new document)";
     win.webContents.send("new");
 }
 
@@ -26,7 +27,8 @@ function openDocument() {
     filename = files[0];
     win.title = "Zikpad - " + filename;
     fs.readFile(filename, 'utf8', (err, data) => {
-        win.webContents.send("open", data)});
+        win.webContents.send("open", data)
+    });
 }
 
 
@@ -77,8 +79,17 @@ app.on('ready', () => {
                 { label: 'Save As', click() { saveAsDocument() } },
                 { label: 'Exit', click() { app.quit() } }
             ]
+        },
+        {
+            label: "Help",
+            submenu: [{
+                label: 'About...', click() {
+                    dialog.showMessageBox(win, { message: "Visit https://zikpad.github.io/" })
+                }
+            }
+            ]
         }
-    ])
+    ]);
 
     Menu.setApplicationMenu(menu);
     win.loadFile('dist/index.html')

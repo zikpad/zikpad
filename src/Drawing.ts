@@ -59,4 +59,16 @@ export class Drawing {
         document.getElementById("svg").appendChild(aLine);
         return aLine;
     }
+
+    static rectangle(x1, y1, width, height) {
+        var aRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        aRect.setAttribute('x', x1);
+        aRect.setAttribute('y', y1);
+        aRect.setAttribute('width', width);
+        aRect.setAttribute('height', height);
+        aRect.setAttribute('stroke', "black");
+        aRect.setAttribute('stroke-width', "8");
+        document.getElementById("svg").appendChild(aRect);
+        return aRect;
+    }
 }

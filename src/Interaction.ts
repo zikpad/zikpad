@@ -3,139 +3,25 @@ import { Note } from "./Note.js";
 import { Layout } from "./Layout.js";
 import { Score } from "./Score.js";
 import { Voice } from "./Voice.js";
+import { KeyEvent } from "./KeyEvent.js";
+import { InteractionSelection } from './InteractionSelection.js';
 
-
-const KeyEvent = {
-    DOM_VK_CANCEL: 3,
-    DOM_VK_HELP: 6,
-    DOM_VK_BACK_SPACE: 8,
-    DOM_VK_TAB: 9,
-    DOM_VK_CLEAR: 12,
-    DOM_VK_RETURN: 13,
-    DOM_VK_ENTER: 14,
-    DOM_VK_SHIFT: 16,
-    DOM_VK_CONTROL: 17,
-    DOM_VK_ALT: 18,
-    DOM_VK_PAUSE: 19,
-    DOM_VK_CAPS_LOCK: 20,
-    DOM_VK_ESCAPE: 27,
-    DOM_VK_SPACE: 32,
-    DOM_VK_PAGE_UP: 33,
-    DOM_VK_PAGE_DOWN: 34,
-    DOM_VK_END: 35,
-    DOM_VK_HOME: 36,
-    DOM_VK_LEFT: 37,
-    DOM_VK_UP: 38,
-    DOM_VK_RIGHT: 39,
-    DOM_VK_DOWN: 40,
-    DOM_VK_PRINTSCREEN: 44,
-    DOM_VK_INSERT: 45,
-    DOM_VK_DELETE: 46,
-    DOM_VK_0: 48,
-    DOM_VK_1: 49,
-    DOM_VK_2: 50,
-    DOM_VK_3: 51,
-    DOM_VK_4: 52,
-    DOM_VK_5: 53,
-    DOM_VK_6: 54,
-    DOM_VK_7: 55,
-    DOM_VK_8: 56,
-    DOM_VK_9: 57,
-    DOM_VK_SEMICOLON: 59,
-    DOM_VK_EQUALS: 61,
-    DOM_VK_A: 65,
-    DOM_VK_B: 66,
-    DOM_VK_C: 67,
-    DOM_VK_D: 68,
-    DOM_VK_E: 69,
-    DOM_VK_F: 70,
-    DOM_VK_G: 71,
-    DOM_VK_H: 72,
-    DOM_VK_I: 73,
-    DOM_VK_J: 74,
-    DOM_VK_K: 75,
-    DOM_VK_L: 76,
-    DOM_VK_M: 77,
-    DOM_VK_N: 78,
-    DOM_VK_O: 79,
-    DOM_VK_P: 80,
-    DOM_VK_Q: 81,
-    DOM_VK_R: 82,
-    DOM_VK_S: 83,
-    DOM_VK_T: 84,
-    DOM_VK_U: 85,
-    DOM_VK_V: 86,
-    DOM_VK_W: 87,
-    DOM_VK_X: 88,
-    DOM_VK_Y: 89,
-    DOM_VK_Z: 90,
-    DOM_VK_CONTEXT_MENU: 93,
-    DOM_VK_NUMPAD0: 96,
-    DOM_VK_NUMPAD1: 97,
-    DOM_VK_NUMPAD2: 98,
-    DOM_VK_NUMPAD3: 99,
-    DOM_VK_NUMPAD4: 100,
-    DOM_VK_NUMPAD5: 101,
-    DOM_VK_NUMPAD6: 102,
-    DOM_VK_NUMPAD7: 103,
-    DOM_VK_NUMPAD8: 104,
-    DOM_VK_NUMPAD9: 105,
-    DOM_VK_MULTIPLY: 106,
-    DOM_VK_ADD: 107,
-    DOM_VK_SEPARATOR: 108,
-    DOM_VK_SUBTRACT: 109,
-    DOM_VK_DECIMAL: 110,
-    DOM_VK_DIVIDE: 111,
-    DOM_VK_F1: 112,
-    DOM_VK_F2: 113,
-    DOM_VK_F3: 114,
-    DOM_VK_F4: 115,
-    DOM_VK_F5: 116,
-    DOM_VK_F6: 117,
-    DOM_VK_F7: 118,
-    DOM_VK_F8: 119,
-    DOM_VK_F9: 120,
-    DOM_VK_F10: 121,
-    DOM_VK_F11: 122,
-    DOM_VK_F12: 123,
-    DOM_VK_F13: 124,
-    DOM_VK_F14: 125,
-    DOM_VK_F15: 126,
-    DOM_VK_F16: 127,
-    DOM_VK_F17: 128,
-    DOM_VK_F18: 129,
-    DOM_VK_F19: 130,
-    DOM_VK_F20: 131,
-    DOM_VK_F21: 132,
-    DOM_VK_F22: 133,
-    DOM_VK_F23: 134,
-    DOM_VK_F24: 135,
-    DOM_VK_NUM_LOCK: 144,
-    DOM_VK_SCROLL_LOCK: 145,
-    DOM_VK_COMMA: 188,
-    DOM_VK_PERIOD: 190,
-    DOM_VK_SLASH: 191,
-    DOM_VK_BACK_QUOTE: 192,
-    DOM_VK_OPEN_BRACKET: 219,
-    DOM_VK_BACK_SLASH: 220,
-    DOM_VK_CLOSE_BRACKET: 221,
-    DOM_VK_QUOTE: 222,
-    DOM_VK_META: 224
-};
 
 
 export class InteractionScore {
-    private selection: Note[] = [];
+    private selection: Set<Note> = new Set();
     readonly score: Score;
     private currentVoice: Voice;
 
-    private draggedElement: Note;
-    private offset;
+    private draggedNote: Note;
+    private offset: Map<Note, { x: number, y: number }>;
     private dragOccurred: boolean = false;
 
     private updateAsked = false;
 
     private player: Player = undefined;
+    dragCopyMade: boolean = false;
+    private interactionSelection: InteractionSelection = undefined;
 
 
     constructor(score: Score) {
@@ -148,27 +34,26 @@ export class InteractionScore {
             let b = document.createElement("button");
             b.classList.add("voiceButton");
             b.title = "write in voice n°" + i;
+            b.innerHTML = "voice n°" + i;
             b.style.backgroundColor = Voice.voiceColors[i];
-            b.addEventListener("click", () => {
+            b.onclick = () => {
                 this.currentVoice = score.voices[i];
                 for (let note of this.selection) {
                     score.removeNote(note);
                     this.currentVoice.addNote(note);
                 }
                 this.update();
-            })
+            }
             document.getElementById("voiceButtonPalette").appendChild(b);
 
         }
 
-        document.getElementById("playButton").addEventListener("click",
+        document.getElementById("playButton").onclick =
             (evt) => {
-                console.log("button play")
                 if (this.player == undefined) {
                     this.player = new Player(this.score);
                     document.getElementById("playButton").innerHTML = "stop!";
                 }
-
                 else {
                     this.player.stop();
                     this.player = undefined;
@@ -176,7 +61,6 @@ export class InteractionScore {
                 }
 
             }
-        );
 
         this.setup();
     }
@@ -194,67 +78,75 @@ export class InteractionScore {
         for (let i = 0; i < circles.length; i++) {
             let circle = circles[i];
             circle.classList.remove("selection");
-            circle.addEventListener('mousedown', (evt) => this.startDrag(evt));
-            circle.addEventListener('mousemove', (evt) => this.drag(evt));
-            circle.addEventListener('mouseup', (evt) => this.endDrag(evt));
+            circle.onmousedown = (evt) => this.startDrag(evt);
+            circle.onmousemove = (evt) => this.drag(evt);
+            circle.onmouseup = (evt) => this.endDrag(evt);
         }
 
-        if(this.selection.length >= 1)
-        for (let note of this.selection)
-            note.svgCircle.classList.add("selection");
+        if (this.selection.size >= 1)
+            for (let note of this.selection)
+                note.svgCircle.classList.add("selection");
 
-        document.addEventListener("keydown", (evt) => {
+        document.onkeydown = (evt) => {
             if (evt.keyCode == KeyEvent.DOM_VK_DELETE) {
                 for (let note of this.selection)
                     this.score.removeNote(note);
-                this.selection = [];
+                this.selection = new Set();
                 this.update();
             }
-        });
-        document.getElementById("svgBackground").addEventListener('mousemove', (evt) => this.drag(evt));
-        document.getElementById("svgBackground").addEventListener('mouseup', (evt) => this.endDrag(evt));
+        };
 
-        document.getElementById("svgBackground").addEventListener("click", (evt) => {
-            console.log("click")
-            if (this.selection.length > 0) {
-                this.selection = [];
-            }
-            else {
-                let note = new Note(evt.clientX + document.getElementById("svg-wrapper").scrollLeft, Layout.getPitch(evt.y));
-                this.currentVoice.addNote(note);
-            }
-            this.update();
+        document.getElementById("svgBackground").onmousedown = (evt) => this.mouseDownBackground(evt);
+        document.getElementById("svgBackground").onmousemove = (evt) => this.drag(evt);
+        document.getElementById("svgBackground").onmouseup = (evt) => this.endDrag(evt);
 
-        });
+
 
     }
 
 
 
 
+    mouseDownBackground(evt: MouseEvent) {
+        if (this.interactionSelection == undefined)
+            this.interactionSelection = new InteractionSelection(this.score, evt);
+    }
 
 
     startDrag(evt: MouseEvent) {
         this.dragOccurred = false;
-        let target = (<any>evt.target);
-        let note = (<any>evt.target).note;
-        this.draggedElement = note;
+        this.dragCopyMade = false;
+        this.draggedNote = (<any>evt.target).note;
 
-        if (this.selection.indexOf(note) < 0) {
+        //click on a selected note
+        if (this.draggedNote && !(this.dragOccurred) && this.selection.has(this.draggedNote)) {
+                this.draggedNote.toggle();
+        }
+        //click on a non-selected note
+        else if (this.draggedNote && !this.dragOccurred) {
             if (evt.ctrlKey)
-                this.selection.push(note);
+                this.selection = this.selection.add(this.draggedNote);
             else
-                this.selection = [note];
+                this.selection = new Set([this.draggedNote]);
         }
 
-        if (this.draggedElement == null)
-            throw "error"
-        this.offset = { x: evt.clientX, y: evt.clientY };
-        this.offset.x -= parseFloat(target.getAttributeNS(null, "cx"));
-        this.offset.y -= parseFloat(target.getAttributeNS(null, "cy"));
+        this.offset = this.getOffset(evt, this.selection);
 
     }
 
+
+
+    getOffset(evt, selection) {
+        let r = new Map();
+        for (let note of selection) {
+            let p = { x: evt.clientX, y: evt.clientY };
+            p.x -= parseFloat(note.svgCircle.getAttributeNS(null, "cx"));
+            p.y -= parseFloat(note.svgCircle.getAttributeNS(null, "cy"));
+            r.set(note, p);
+        }
+        return r;
+
+    }
 
     askUpdate() {
         if (!this.updateAsked) {
@@ -263,25 +155,66 @@ export class InteractionScore {
         }
     }
 
-    drag(evt) {
+    drag(evt: MouseEvent) {
         this.dragOccurred = true;
-        if (this.draggedElement) {
+
+        if (this.interactionSelection)
+            this.interactionSelection.mouseMove(evt);
+        else if (this.draggedNote) {
             evt.preventDefault();
-            var coord = { x: evt.clientX, y: evt.clientY };
-            this.draggedElement.update(coord.x - this.offset.x,
-                Layout.getPitch(coord.y - this.offset.y));
+            let coord = { x: evt.clientX, y: evt.clientY };
+
+            if (evt.ctrlKey && !this.dragCopyMade) {
+                let newSelection = [];
+                for (let note of this.selection) {
+                    let newNote = new Note(note.x, note.pitch);
+                    newSelection.push(newNote);
+                    this.currentVoice.addNote(newNote);
+                }
+                this.selection = new Set(newSelection);
+                this.offset = this.getOffset(evt, this.selection);
+                this.dragCopyMade = true;
+            }
+
+
+            for (let note of this.selection) {
+                let dx = coord.x - this.offset.get(note).x;
+                let dy = coord.y - this.offset.get(note).y;
+                note.update(dx, Layout.getPitch(dy));
+            }
+
+
             this.askUpdate();
         }
     }
 
 
     endDrag(evt) {
-        if (!this.dragOccurred && !evt.ctrlKey)
-            this.draggedElement.toggle();
-        if (this.draggedElement != null)
-            this.update();
+        //selection rectangle
+        if (this.interactionSelection && this.interactionSelection.isActive()) {
+            if (evt.ctrlKey) {
+                for (let note of this.interactionSelection.getSelection())
+                    this.selection.add(note);
+            }
+            else
+                this.selection = new Set(this.interactionSelection.getSelection());
+            this.interactionSelection = undefined;
+        }
+        //click outside a note
+        else if (!this.draggedNote &&
+            (!this.interactionSelection || !this.interactionSelection.isActive())) {
+            if (this.selection.size > 0)
+                this.selection = new Set();
+            else {
+                let note = new Note(evt.clientX + document.getElementById("svg-wrapper").scrollLeft, Layout.getPitch(evt.y));
+                this.currentVoice.addNote(note);
+            }
+        }
 
-        this.draggedElement = null;
+
+        this.interactionSelection = null;
+        this.draggedNote = null;
+        this.update();
     }
 
 

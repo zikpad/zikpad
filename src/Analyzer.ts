@@ -14,6 +14,12 @@ export class Analyzer {
 
 
     computeTime(timeSteps: TimeStep[]) {
+
+
+        function getEnd(t) {
+            return Math.floor(t) + 1;
+        }
+
         if (timeSteps.length == 0) return;
 
         for (let ts of timeSteps) {
@@ -25,7 +31,7 @@ export class Analyzer {
             if (i < timeSteps.length - 1)
                 timeSteps[i].duration = getDuration(timeSteps[i + 1].t - timeSteps[i].t);
             else
-                timeSteps[i].duration = getDuration(1 - timeSteps[i].t);
+                timeSteps[i].duration = getDuration(getEnd(timeSteps[i].t) - timeSteps[i].t);
 
             timeSteps[i].t = t;
             t += timeSteps[i].duration;
@@ -74,35 +80,7 @@ export class Analyzer {
         }
     }
 
-    getLilypond(): string {
-        let s = "";
-        let i = 0;
-        while (i < this.voice.timeSteps.length) {
-            if (this.voice.isTrioletStartingFrom(i)) {
-                s += `\\tuplet 3/2 { ${this.voice.timeSteps[i].getPitchs()}8 ${this.voice.timeSteps[i + 1].getPitchs()} ${this.voice.timeSteps[i + 2].getPitchs()}} `;
-                i += 3;
-            }
-            else {
-                s += this.voice.timeSteps[i].getPitchs();
-                s += getDurationLilypond(this.voice.timeSteps[i].duration);
-
-                if (this.voice.timeSteps[i].isDot())
-                    s += ".";
-                s += " ";
-                i++;
-
-            }
-        }
-
-
-
-        /* s += " ";
-         for (let timestep of this.score.timeSteps) {
-             s += `${timestep._duration} `;
-         }*/
-
-        return s;
-    }
+    
 }
 
 
@@ -134,14 +112,7 @@ function getDuration(dt: number): number {
 
 
 
-function getDurationLilypond(duration) {
-    if (duration >= 1) return "1";
-    if (duration >= 0.5) return "2";
-    if (duration >= 0.25) return "4";
-    if (duration >= 0.25 / 2) return "8";
-    console.log(duration)
-    return "16";
-}
+
 
 
 function equalReal(v, v2) {
