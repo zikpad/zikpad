@@ -4,7 +4,7 @@ import { Voice } from './Voice.js';
 import { Note } from './Note.js';
 
 export class Score {
-    
+
     voices: Voice[] = [];
 
 
@@ -20,12 +20,9 @@ export class Score {
 
     _draw() {
         clear();
-
-
         for (let voice of this.voices) voice.draw();
         drawLandMark();
         drawLines();
-        
     }
 
     update() {
@@ -44,20 +41,25 @@ function clear() {
 
 
 function drawLines() {
+    //extra lines
     for (let i of [-20, -18, -16, -14, -12, 0, 12, 14, 16, 18, 20]) {
         let y = Layout.getY(i);
         Drawing.lineLight(0, y, Layout.WIDTH, y);
     }
+
+    //treble staff
     for (let i of [2, 4, 6, 8, 10]) {
         let y = Layout.getY(i);
         Drawing.line(0, y, Layout.WIDTH, y);
     }
 
+    //bass staff
     for (let i of [-2, -4, -6, -8, -10]) {
         let y = Layout.getY(i);
         Drawing.line(0, y, Layout.WIDTH, y);
     }
 
+    //measure lines
     for (let t = 0; t < 30; t++) {
         let x = Layout.getX(t) - 2 * Layout.NOTERADIUS;
         Drawing.line(x, Layout.getY(-10), x, Layout.getY(10));
@@ -65,7 +67,9 @@ function drawLines() {
 
 }
 
-
+/**
+ * draw small vertical lines for landmarks for the beats
+ */
 function drawLandMark() {
     for (let t = 0; t < 50; t += 0.25) {
         const x = Layout.getX(t);

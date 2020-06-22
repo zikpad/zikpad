@@ -49,7 +49,7 @@ export class Lilypond {
     }
 
 
-    static getDurationLilypond(duration) {
+    private static getDurationBasisLilypond(duration) {
         if (duration >= 1) return "1";
         if (duration >= 0.5) return "2";
         if (duration >= 0.25) return "4";
@@ -57,7 +57,7 @@ export class Lilypond {
         return "16";
     }
 
-    static getCodeVoice(voice: Voice): string {
+    private static getCodeVoice(voice: Voice): string {
         let s = "";
         let i = 0;
         while (i < voice.timeSteps.length) {
@@ -67,7 +67,7 @@ export class Lilypond {
             }
             else {
                 s += voice.timeSteps[i].getPitchs();
-                s += Lilypond.getDurationLilypond(voice.timeSteps[i].duration);
+                s += Lilypond.getDurationBasisLilypond(voice.timeSteps[i].duration);
 
                 if (voice.timeSteps[i].isDot())
                     s += ".";
@@ -77,28 +77,16 @@ export class Lilypond {
             }
         }
 
-
-
-        /* s += " ";
-         for (let timestep of this.score.timeSteps) {
-             s += `${timestep._duration} `;
-         }*/
-
         return s;
     }
 
 
 
-    static getVoiceName(i: string) {
-        let j = parseInt(i);
-        //alert(j)
-        //alert(String.fromCharCode(65+j))
-        return "voice" + String.fromCharCode(65 + j);
-    }
+    static getVoiceName(i: string) { return "voice" + String.fromCharCode(65 + parseInt(i)); }
 
     static getCode(score: Score) {
-        let lines = [];
-        for (let i in score.voices)
+        const lines = [];
+        for (const i in score.voices)
             if (!score.voices[i].isEmpty()) {
                 lines.push(`%ZIKPAD voice ${i}`);
                 for (let note of score.voices[i].notes) {
@@ -151,7 +139,8 @@ export class Lilypond {
 
         return lines.join("\n");
     }
-    static getVoiceClef(voice: Voice): string {
+
+    private static getVoiceClef(voice: Voice): string {
         if (voice.notes.length == 0) return "";
 
         let s = 0;

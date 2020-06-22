@@ -1,10 +1,9 @@
 import { Drawing } from './Drawing.js';
 import { Voice, TimeStep } from "./Voice.js";
-import { Note } from "./Note.js";
 import { Layout } from "./Layout.js";
 
 export class Analyzer {
-    voice: Voice;
+    private voice: Voice;
 
     analyze(voice: Voice) {
         this.voice = voice;

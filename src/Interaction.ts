@@ -119,7 +119,7 @@ export class InteractionScore {
         this.draggedNote = (<any>evt.target).note;
 
         //click on a selected note
-        if (this.draggedNote && !(this.dragOccurred) && this.selection.has(this.draggedNote)) {
+        if (this.draggedNote && !(this.dragOccurred) && (this.selection.has(this.draggedNote) && this.selection.size == 1)) {
                 this.draggedNote.toggle();
         }
         //click on a non-selected note
@@ -206,7 +206,8 @@ export class InteractionScore {
             if (this.selection.size > 0)
                 this.selection = new Set();
             else {
-                let note = new Note(evt.clientX + document.getElementById("svg-wrapper").scrollLeft, Layout.getPitch(evt.y));
+                let note = new Note(evt.clientX + document.getElementById("svg-wrapper").scrollLeft, 
+                Layout.getPitch(evt.y));
                 this.currentVoice.addNote(note);
             }
         }

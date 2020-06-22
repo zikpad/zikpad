@@ -5,10 +5,10 @@ import { Drawing } from "./Drawing.js";
 type Alteration = "" | "b" | "#" | "x" | "bb";
 
 export class Note {
-    get midiPitch() {
+    get midiPitch(): number {
         let f = () => {
             let x = this.pitch % 7;
-            if(x < 0) x+= 7;
+            if (x < 0) x += 7;
             switch (x) {
                 case 0: return 0;
                 case 1: return 2;
@@ -19,12 +19,9 @@ export class Note {
                 case 6: return 11;
             }
         }
-
         return 62 + 12 * Math.floor(this.pitch / 7) + f();
     }
-    delete() {
 
-    }
 
 
     x: number;
@@ -43,8 +40,7 @@ export class Note {
 
     constructor(x: number, pitch: number) {
         this.x = x, this.pitch = pitch;
-        this.svgCircle = Drawing.circle(this.x, this.y,
-            Layout.getNoteRadius());
+        this.svgCircle = Drawing.circle(this.x, this.y, Layout.NOTERADIUS);
         this.svtTextAlteration = Drawing.text(this.x - Layout.NOTERADIUS * 2, this.y + Layout.NOTERADIUS / 2, this.alteration);
 
         (<any>this.svgCircle).note = this;
@@ -55,6 +51,9 @@ export class Note {
         document.getElementById("svg").appendChild(this.svtTextAlteration);
     }
 
+    /**
+     * toggle Silence <-> Not Silence (Real note)
+     */
     toggle() {
         this.silence = !this.silence;
         if (this.svgCircle.classList.contains("silence"))
@@ -93,14 +92,12 @@ export class Note {
         this.svtTextAlteration.setAttribute('y', (this.y + Layout.NOTERADIUS / 2).toString());
     }
 
-    get y() {
-        return Layout.getY(this.pitch);
-    }
+    get y() { return Layout.getY(this.pitch); }
 
     get pitchName(): string {
         let f = () => {
             let i = this.pitch % 7;
-            if(i < 0) i += 7;
+            if (i < 0) i += 7;
             switch (i) {
                 case 0: return "c";
                 case 1: return "d";
@@ -112,10 +109,9 @@ export class Note {
             }
             return "e";
         }
-        let octave = Math.floor(this.pitch / 7)+1;
+        let octave = Math.floor(this.pitch / 7) + 1;
         return f() + ((octave >= 0) ? "'".repeat(octave) : ",".repeat(-octave));
     }
-
 }
 
 
