@@ -50,16 +50,18 @@ export class InteractionScore {
 
         document.getElementById("playButton").onclick =
             (evt) => {
+                const icon = document.getElementById("playButton").children[0];
                 if (this.player == undefined) {
                     this.player = new Player(this.score, document.getElementById("svg-wrapper").scrollLeft / Layout.WIDTHONE);
-                    document.getElementById("playButton").innerHTML = "stop!";
+                    icon.classList.add("fa-stop");
+                    icon.classList.remove("fa-play");
                 }
                 else {
                     this.player.stop();
                     this.player = undefined;
-                    document.getElementById("playButton").innerHTML = "play!";
+                    icon.classList.remove("fa-stop");
+                    icon.classList.add("fa-play");
                 }
-
             }
 
         this.setup();
