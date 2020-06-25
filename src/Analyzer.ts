@@ -1,3 +1,4 @@
+import { Note } from './Note.js';
 import { Drawing } from './Drawing.js';
 import { Voice, TimeStep } from "./Voice.js";
 import { Layout } from "./Layout.js";
@@ -77,9 +78,25 @@ export class Analyzer {
                 Drawing.text((this.voice.timeSteps[i].x + this.voice.timeSteps[i + 2].x) / 2,
                     this.voice.timeSteps[i].yRythm - 2, "3");
         }
+
+        let drawExtraLine = (x: number, i: number) => {
+            const y = Layout.getY(i);
+            const FACT = 1.8;
+            Drawing.line(x - Layout.NOTERADIUS * FACT, y, x + Layout.NOTERADIUS * FACT, y);
+        }
+
+        for (let note of this.voice.notes) if (!note.isSilence()) {
+            if (note.pitch == 0)
+                drawExtraLine(note.x, 0);
+            for (let i = -10; i >= note.pitch; i-=2)
+                drawExtraLine(note.x, i);
+            for (let i = 10; i <= note.pitch; i+=2)
+                drawExtraLine(note.x, i);
+        }
+
     }
 
-    
+
 }
 
 

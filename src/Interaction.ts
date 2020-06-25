@@ -51,7 +51,7 @@ export class InteractionScore {
         document.getElementById("playButton").onclick =
             (evt) => {
                 if (this.player == undefined) {
-                    this.player = new Player(this.score);
+                    this.player = new Player(this.score, document.getElementById("svg-wrapper").scrollLeft / Layout.WIDTHONE);
                     document.getElementById("playButton").innerHTML = "stop!";
                 }
                 else {
@@ -100,8 +100,10 @@ export class InteractionScore {
         document.getElementById("svgBackground").onmousemove = (evt) => this.drag(evt);
         document.getElementById("svgBackground").onmouseup = (evt) => this.endDrag(evt);
 
-
-
+        document.addEventListener('touchmove', (e) => e.preventDefault(), {passive: false});
+        document.addEventListener('touchforcechange', (e) => e.preventDefault(), {passive: false});
+        document.getElementById("svgBackground").addEventListener('touchmove', (e) => e.preventDefault(), {passive: false});
+        document.getElementById("svgBackground").addEventListener('touchforcechange', (e) => e.preventDefault(), {passive: false});
     }
 
 
@@ -123,7 +125,7 @@ export class InteractionScore {
                 this.draggedNote.toggle();
         }
         //click on a non-selected note
-        else if (this.draggedNote && !this.dragOccurred) {
+        else if (this.draggedNote && !this.dragOccurred && (!this.selection.has(this.draggedNote) )) {
             if (evt.ctrlKey)
                 this.selection = this.selection.add(this.draggedNote);
             else
