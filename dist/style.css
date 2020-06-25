@@ -13,6 +13,7 @@ svg {
 
 circle {
 	stroke-width: 3px;
+	cursor: pointer;
 }
 
 
@@ -63,6 +64,15 @@ circle:hover {
 
 #palette {
 	bottom: 0px;
+}
+
+
+#palette div {
+	display: inline;
+}
+
+#lilypondPalette {
+	visibility: hidden;
 }
 
 .silence:hover {

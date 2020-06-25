@@ -1,0 +1,38 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="keyboardtyping.js" type="module"></script>
+  <script src="main.js" type="module"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+  <button class="btn" id="playButton" title="play"><i class="fa fa-play"></i></button>
+  <button class="btn" id="downloadLilypond" title="Download the score in the lilypond format"><i
+      class="fa fa-download"></i></button>
+  <div id="svg-wrapper">
+    <svg id="svg"></svg>
+  </div>
+
+  <div id="palette">
+    <div id="voiceButtonPalette">
+    </div>
+    <div>
+      <button class="btn"><i class="fa fa-trash"></i></button>
+      <button class="btn"><i class="fa fa-arrow-circle-left"></i></button>
+      <button class="btn"><i class="fa fa-arrow-circle-right"></i></button>
+      <button class="btn">#</button>
+      <button class="btn">b</button>
+    </div>
+    <div id="lilypondPalette">
+      <button id="clear">Clear</button>
+      Lilypond code: <input id="lilypond" />
+      <button id="validate">validate!</button>
+    </div>
+  </div>
+
+</body>
+
+</html>
