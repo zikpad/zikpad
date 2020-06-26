@@ -100,6 +100,7 @@ export class InteractionScore {
     actionAlterationUp() {
         for (let note of this.selection)
             note.alteration = Math.min(2, note.alteration+1);
+            
         this.update();
     }
 

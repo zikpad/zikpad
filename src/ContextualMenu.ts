@@ -25,7 +25,7 @@ export class ContextualMenu {
 
 
             function setPosition(btnName: string, x: number, y: number) {
-                document.getElementById(btnName).style.left = (x-10).toString();
+                document.getElementById(btnName).style.left = (x-5).toString();
                 document.getElementById(btnName).style.top = "" + y;
             }
 

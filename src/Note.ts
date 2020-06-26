@@ -6,7 +6,7 @@ type AlterationSymbol = "" | "b" | "#" | "x" | "bb";
 
 
 function alterationToSymbol(a: number) {
-    switch(a) {
+    switch (a) {
         case -2: return "bb";
         case -1: return "b";
         case 0: return "";
@@ -32,7 +32,7 @@ export class Note {
                 case 6: return 11;
             }
         }
-        return 62 + 12 * Math.floor(this.pitch / 7) + f();
+        return 62 + 12 * Math.floor(this.pitch / 7) + f() + this._alteration;
     }
 
 
@@ -41,12 +41,26 @@ export class Note {
     pitch: number;
     private silence: boolean = false;
     color: string = "black";
-    alteration: number;
+    _alteration: number = 0;
 
     setColor(color: string) {
         this.color = color;
         this.svgCircle.setAttribute('stroke', this.color);
     }
+
+
+
+    get alteration() {
+        return this._alteration;
+    }
+
+
+    set alteration(alt) {
+        this._alteration = alt;
+        this.svtTextAlteration.textContent = alterationToSymbol(this.alteration);
+        console.log(this._alteration);
+    }
+
 
     public svgCircle: SVGCircleElement;
     private svtTextAlteration: SVGTextElement;
@@ -69,6 +83,9 @@ export class Note {
      */
     toggle() {
         this.silence = !this.silence;
+        this.svtTextAlteration.style.visibility = this.silence ? "hidden" : "visible";
+
+
         if (this.svgCircle.classList.contains("silence"))
             this.svgCircle.classList.remove("silence");
         else
