@@ -1,3 +1,4 @@
+import { ContextualMenu } from './ContextualMenu.js';
 import { Player } from './Player.js';
 import { Note } from "./Note.js";
 import { Layout } from "./Layout.js";
@@ -9,6 +10,7 @@ import { InteractionSelection } from './InteractionSelection.js';
 
 
 export class InteractionScore {
+
     private selection: Set<Note> = new Set();
     readonly score: Score;
     private currentVoice: Voice;
@@ -64,9 +66,48 @@ export class InteractionScore {
                 }
             }
 
+
+        document.getElementById("delete").onclick = () => { this.actionDelete(); };
+        document.getElementById("toggle").onclick = () => { this.actionToggle(); };
+        document.getElementById("alterationUp").onclick = () => { this.actionAlterationUp(); };
+        document.getElementById("alterationDown").onclick = () => { this.actionAlterationDown(); };
+
         this.setup();
     }
 
+
+
+
+    
+
+    actionDelete() {
+        for (let note of this.selection)
+            this.score.removeNote(note);
+        this.selection = new Set();
+        this.update();
+        ContextualMenu.hide();
+    }
+
+
+    actionToggle() {
+        for (let note of this.selection)
+            note.toggle();
+        this.update();
+    }
+
+
+
+    actionAlterationUp() {
+        for (let note of this.selection)
+            note.alteration = Math.min(2, note.alteration+1);
+        this.update();
+    }
+
+    actionAlterationDown() {
+        for (let note of this.selection)
+            note.alteration = Math.max(-2, note.alteration-1);
+        this.update();
+    }
 
     update() {
         this.score.update();
@@ -91,10 +132,7 @@ export class InteractionScore {
 
         document.onkeydown = (evt) => {
             if (evt.keyCode == KeyEvent.DOM_VK_DELETE) {
-                for (let note of this.selection)
-                    this.score.removeNote(note);
-                this.selection = new Set();
-                this.update();
+                this.actionDelete();
             }
         };
 
@@ -102,16 +140,17 @@ export class InteractionScore {
         document.getElementById("svgBackground").onmousemove = (evt) => this.drag(evt);
         document.getElementById("svgBackground").onmouseup = (evt) => this.endDrag(evt);
 
-        document.addEventListener('touchmove', (e) => e.preventDefault(), {passive: false});
-        document.addEventListener('touchforcechange', (e) => e.preventDefault(), {passive: false});
-        document.getElementById("svgBackground").addEventListener('touchmove', (e) => e.preventDefault(), {passive: false});
-        document.getElementById("svgBackground").addEventListener('touchforcechange', (e) => e.preventDefault(), {passive: false});
+        document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+        document.addEventListener('touchforcechange', (e) => e.preventDefault(), { passive: false });
+        document.getElementById("svgBackground").addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+        document.getElementById("svgBackground").addEventListener('touchforcechange', (e) => e.preventDefault(), { passive: false });
     }
 
 
 
 
     mouseDownBackground(evt: MouseEvent) {
+        ContextualMenu.hide();
         if (this.interactionSelection == undefined)
             this.interactionSelection = new InteractionSelection(this.score, evt);
     }
@@ -122,12 +161,8 @@ export class InteractionScore {
         this.dragCopyMade = false;
         this.draggedNote = (<any>evt.target).note;
 
-        //click on a selected note
-        if (this.draggedNote && !(this.dragOccurred) && (this.selection.has(this.draggedNote) && this.selection.size == 1)) {
-                this.draggedNote.toggle();
-        }
-        //click on a non-selected note
-        else if (this.draggedNote && !this.dragOccurred && (!this.selection.has(this.draggedNote) )) {
+        ContextualMenu.toggle(this.selection);
+        if (this.draggedNote && !this.dragOccurred && (!this.selection.has(this.draggedNote))) {
             if (evt.ctrlKey)
                 this.selection = this.selection.add(this.draggedNote);
             else
@@ -210,8 +245,8 @@ export class InteractionScore {
             if (this.selection.size > 0)
                 this.selection = new Set();
             else {
-                let note = new Note(evt.clientX + document.getElementById("svg-wrapper").scrollLeft, 
-                Layout.getPitch(evt.y));
+                let note = new Note(evt.clientX + document.getElementById("svg-wrapper").scrollLeft,
+                    Layout.getPitch(evt.y));
                 this.currentVoice.addNote(note);
             }
         }

@@ -2,7 +2,20 @@ import { Layout } from "./Layout.js";
 import { Drawing } from "./Drawing.js";
 
 
-type Alteration = "" | "b" | "#" | "x" | "bb";
+type AlterationSymbol = "" | "b" | "#" | "x" | "bb";
+
+
+function alterationToSymbol(a: number) {
+    switch(a) {
+        case -2: return "bb";
+        case -1: return "b";
+        case 0: return "";
+        case 1: return "#";
+        case 2: return "x";
+        default: return "";
+    }
+}
+
 
 export class Note {
     get midiPitch(): number {
@@ -28,7 +41,7 @@ export class Note {
     pitch: number;
     private silence: boolean = false;
     color: string = "black";
-    alteration: Alteration = "";
+    alteration: number;
 
     setColor(color: string) {
         this.color = color;
@@ -41,7 +54,7 @@ export class Note {
     constructor(x: number, pitch: number) {
         this.x = x, this.pitch = pitch;
         this.svgCircle = Drawing.circle(this.x, this.y, Layout.NOTERADIUS);
-        this.svtTextAlteration = Drawing.text(this.x - Layout.NOTERADIUS * 2, this.y + Layout.NOTERADIUS / 2, this.alteration);
+        this.svtTextAlteration = Drawing.text(this.x - Layout.NOTERADIUS * 2, this.y + Layout.NOTERADIUS / 2, alterationToSymbol(this.alteration));
 
         (<any>this.svgCircle).note = this;
     };
