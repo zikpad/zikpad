@@ -14,6 +14,7 @@ import { Layout } from "./src/Layout.js";
 
 window.onload = init;
 
+
 /**
  * when the window is resized
  */

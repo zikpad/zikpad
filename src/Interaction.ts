@@ -1,3 +1,5 @@
+import { Harmony } from './Harmony.js';
+import { MicrophoneInput } from './MicrophoneInput.js';
 import { ContextualMenu } from './ContextualMenu.js';
 import { Player } from './Player.js';
 import { Note } from "./Note.js";
@@ -26,7 +28,23 @@ export class InteractionScore {
     private interactionSelection: InteractionSelection = undefined;
 
 
-    constructor(score: Score) {
+    constructor(score: Score) {       
+
+        try {
+            const microphoneInput = new MicrophoneInput();
+            microphoneInput.onNote = (freq) => {
+                document.getElementById("microphoneInputFreq").innerHTML = freq;
+                let pitch = Harmony.freqToPitch(freq);
+                if(this.selection.size == 1) {
+                    for(let note of this.selection)
+                        note.update(note.x, pitch);
+                }
+    
+            };    
+        } catch(e) {
+            document.getElementById("microphoneInput").style.visibility = "hidden";
+        }
+        
         this.score = score;
         this.currentVoice = this.score.voices[0];
         score.update();
@@ -78,7 +96,7 @@ export class InteractionScore {
 
 
 
-    
+
 
     actionDelete() {
         for (let note of this.selection)
@@ -99,14 +117,14 @@ export class InteractionScore {
 
     actionAlterationUp() {
         for (let note of this.selection)
-            note.alteration = Math.min(2, note.alteration+1);
-            
+            note.alteration = Math.min(2, note.alteration + 1);
+
         this.update();
     }
 
     actionAlterationDown() {
         for (let note of this.selection)
-            note.alteration = Math.max(-2, note.alteration-1);
+            note.alteration = Math.max(-2, note.alteration - 1);
         this.update();
     }
 
@@ -162,13 +180,14 @@ export class InteractionScore {
         this.dragCopyMade = false;
         this.draggedNote = (<any>evt.target).note;
 
-        ContextualMenu.toggle(this.selection);
+
         if (this.draggedNote && !this.dragOccurred && (!this.selection.has(this.draggedNote))) {
             if (evt.ctrlKey)
                 this.selection = this.selection.add(this.draggedNote);
             else
                 this.selection = new Set([this.draggedNote]);
         }
+        ContextualMenu.toggle(this.selection);
 
         this.offset = this.getOffset(evt, this.selection);
 
@@ -198,8 +217,12 @@ export class InteractionScore {
     drag(evt: MouseEvent) {
         this.dragOccurred = true;
 
-        if (this.interactionSelection)
+
+        if (this.interactionSelection) {
             this.interactionSelection.mouseMove(evt);
+            ContextualMenu.hide();
+        }
+
         else if (this.draggedNote) {
             evt.preventDefault();
             let coord = { x: evt.clientX, y: evt.clientY };
@@ -223,7 +246,7 @@ export class InteractionScore {
                 note.update(dx, Layout.getPitch(dy));
             }
 
-
+            ContextualMenu.hide();
             this.askUpdate();
         }
     }
@@ -238,6 +261,7 @@ export class InteractionScore {
             }
             else
                 this.selection = new Set(this.interactionSelection.getSelection());
+            ContextualMenu.show(this.selection);
             this.interactionSelection = undefined;
         }
         //click outside a note
@@ -250,6 +274,7 @@ export class InteractionScore {
                     Layout.getPitch(evt.y));
                 this.currentVoice.addNote(note);
             }
+            ContextualMenu.hide();
         }
 
 

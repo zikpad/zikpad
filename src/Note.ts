@@ -125,6 +125,9 @@ export class Note {
     get y() { return Layout.getY(this.pitch); }
 
     get pitchName(): string {
+        if (this.isSilence())
+            return "r";
+
         let f = () => {
             let i = this.pitch % 7;
             if (i < 0) i += 7;

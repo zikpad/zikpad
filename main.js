@@ -74,8 +74,8 @@ app.on('ready', () => {
             label: 'File',
             submenu: [
                 { label: 'New', click() { newDocument() } },
-                { label: 'Open', click() { openDocument() } },
-                { label: 'Save', click() { saveDocument() } },
+                { label: 'Open', accelerator: "Ctrl+O", click() { openDocument() } },
+                { label: 'Save', accelerator: "Ctrl+S", click() { saveDocument() } },
                 { label: 'Save As', click() { saveAsDocument() } },
                 { label: 'Exit', click() { app.quit() } }
             ]
@@ -93,6 +93,21 @@ app.on('ready', () => {
 
     Menu.setApplicationMenu(menu);
     win.loadFile('dist/index.html')
+
+    win.on('close', function (e) {
+        let choice = require('electron').dialog.showMessageBoxSync(this,
+            {
+                type: 'question',
+                buttons: ['Yes', 'No'],
+                title: 'Confirm',
+                message: 'Are you sure you want to quit?'
+            });
+        if (choice == 1) {
+            e.preventDefault();
+        }
+    });
+
+
 });
 
 
