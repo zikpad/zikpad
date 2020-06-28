@@ -42,7 +42,7 @@ export class ContextualMenu {
             document.getElementById("toggle").style.visibility = "visible";
             document.getElementById("delete").style.visibility = "visible";
 
-            const MENURADIUS = 50;
+            const MENURADIUS = 40;
             setPosition("toggle", x2 + MENURADIUS, y1 - MENURADIUS);
             setPosition("delete", x2 + MENURADIUS, y1 + MENURADIUS);
 

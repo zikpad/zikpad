@@ -1,5 +1,5 @@
+import { InteractionRecordingMicrophone } from './InteractionRecordingMicrophone.js';
 import { Harmony } from './Harmony.js';
-import { MicrophoneInput } from './MicrophoneInput.js';
 import { ContextualMenu } from './ContextualMenu.js';
 import { Player } from './Player.js';
 import { Note } from "./Note.js";
@@ -8,6 +8,7 @@ import { Score } from "./Score.js";
 import { Voice } from "./Voice.js";
 import { KeyEvent } from "./KeyEvent.js";
 import { InteractionSelection } from './InteractionSelection.js';
+import { Pitch } from './Pitch.js';
 
 
 
@@ -26,25 +27,25 @@ export class InteractionScore {
     private player: Player = undefined;
     dragCopyMade: boolean = false;
     private interactionSelection: InteractionSelection = undefined;
+    private interactionRecordingMicrophone: InteractionRecordingMicrophone;
+
+    constructor(score: Score) {
+
+        ContextualMenu.hide();
+
+        this.interactionRecordingMicrophone = new InteractionRecordingMicrophone();
+        this.interactionRecordingMicrophone.onNote = (freq) => {
+
+            //document.getElementById("microphoneInputFreq").innerHTML = freq;
+            let pitch = Harmony.freqToPitch(freq);
+
+            if (this.selection.size == 1) {
+                for (let note of this.selection)
+                    note.update(note.x, pitch);
+            }
+        };
 
 
-    constructor(score: Score) {       
-
-        try {
-            const microphoneInput = new MicrophoneInput();
-            microphoneInput.onNote = (freq) => {
-                document.getElementById("microphoneInputFreq").innerHTML = freq;
-                let pitch = Harmony.freqToPitch(freq);
-                if(this.selection.size == 1) {
-                    for(let note of this.selection)
-                        note.update(note.x, pitch);
-                }
-    
-            };    
-        } catch(e) {
-            document.getElementById("microphoneInput").style.visibility = "hidden";
-        }
-        
         this.score = score;
         this.currentVoice = this.score.voices[0];
         score.update();
@@ -73,10 +74,12 @@ export class InteractionScore {
                 const icon = document.getElementById("playButton").children[0];
                 if (this.player == undefined) {
                     this.player = new Player(this.score, document.getElementById("svg-wrapper").scrollLeft / Layout.WIDTHONE);
+                    this.interactionRecordingMicrophone.pause();
                     icon.classList.add("fa-stop");
                     icon.classList.remove("fa-play");
                 }
                 else {
+                    this.interactionRecordingMicrophone.unpause();
                     this.player.stop();
                     this.player = undefined;
                     icon.classList.remove("fa-stop");
@@ -243,7 +246,7 @@ export class InteractionScore {
             for (let note of this.selection) {
                 let dx = coord.x - this.offset.get(note).x;
                 let dy = coord.y - this.offset.get(note).y;
-                note.update(dx, Layout.getPitch(dy));
+                note.update(dx, new Pitch(Layout.getPitchValue(dy), 0));
             }
 
             ContextualMenu.hide();
@@ -271,7 +274,7 @@ export class InteractionScore {
                 this.selection = new Set();
             else {
                 let note = new Note(evt.clientX + document.getElementById("svg-wrapper").scrollLeft,
-                    Layout.getPitch(evt.y));
+                new Pitch(Layout.getPitchValue(evt.y), 0));
                 this.currentVoice.addNote(note);
             }
             ContextualMenu.hide();

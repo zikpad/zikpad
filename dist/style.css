@@ -98,7 +98,8 @@ input {
 
 .btn {
 	background-color: DodgerBlue; /* Blue background */
-	border: none; /* Remove borders */
+	border: solid 1px black;
+	border-radius: 16px;
 	color: white; /* White text */
 	padding: 12px 16px; /* Some padding */
 	font-size: 18px; /* Set a font size */
@@ -107,11 +108,32 @@ input {
 	width: 48px;
 	height: 48px;
   }
+
+
+
+  .btnfixed {
+
+	background-color: DodgerBlue; /* Blue background */
+	border: solid 1px black;
+	border-radius: 16px;
+	color: white; /* White text */
+	padding: 12px 16px; /* Some padding */
+	font-size: 18px; /* Set a font size */
+	cursor: pointer; /* Mouse pointer on hover */
+	width: 48px;
+	height: 48px; 
+  }
   
   /* Darker background on mouse-over */
   .btn:hover {
 	background-color: RoyalBlue;
   }
+
+
+  .btnfixed:hover {
+	background-color: RoyalBlue;
+  }
+
 
 
 
@@ -129,6 +151,10 @@ input {
 
 
 #playButton {
+	
+}
+
+#recordMicrophoneButton {
 	
 }
 

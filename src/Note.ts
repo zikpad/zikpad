@@ -1,3 +1,4 @@
+import { Pitch } from './Pitch.js';
 import { Layout } from "./Layout.js";
 import { Drawing } from "./Drawing.js";
 
@@ -18,27 +19,9 @@ function alterationToSymbol(a: number) {
 
 
 export class Note {
-    get midiPitch(): number {
-        let f = () => {
-            let x = this.pitch % 7;
-            if (x < 0) x += 7;
-            switch (x) {
-                case 0: return 0;
-                case 1: return 2;
-                case 2: return 4;
-                case 3: return 5;
-                case 4: return 7;
-                case 5: return 9;
-                case 6: return 11;
-            }
-        }
-        return 62 + 12 * Math.floor(this.pitch / 7) + f() + this._alteration;
-    }
-
-
 
     x: number;
-    pitch: number;
+    pitch: Pitch;
     private silence: boolean = false;
     color: string = "black";
     _alteration: number = 0;
@@ -51,12 +34,12 @@ export class Note {
 
 
     get alteration() {
-        return this._alteration;
+        return this.pitch.alteration;
     }
 
 
     set alteration(alt) {
-        this._alteration = alt;
+        this.pitch.alteration = alt;
         this.svtTextAlteration.textContent = alterationToSymbol(this.alteration);
         console.log(this._alteration);
     }
@@ -65,7 +48,7 @@ export class Note {
     public svgCircle: SVGCircleElement;
     private svtTextAlteration: SVGTextElement;
 
-    constructor(x: number, pitch: number) {
+    constructor(x: number, pitch: Pitch) {
         this.x = x, this.pitch = pitch;
         this.svgCircle = Drawing.circle(this.x, this.y, Layout.NOTERADIUS);
         this.svtTextAlteration = Drawing.text(this.x - Layout.NOTERADIUS * 2, this.y + Layout.NOTERADIUS / 2, alterationToSymbol(this.alteration));
@@ -114,7 +97,7 @@ export class Note {
         }
     }
 
-    update(x: number, pitch: number) {
+    update(x: number, pitch: Pitch) {
         this.x = x, this.pitch = pitch;
         this.svgCircle.setAttribute('cx', x.toString());
         this.svgCircle.setAttribute('cy', this.y.toString());
@@ -127,23 +110,10 @@ export class Note {
     get pitchName(): string {
         if (this.isSilence())
             return "r";
+        else 
+            return this.pitch.name;
 
-        let f = () => {
-            let i = this.pitch % 7;
-            if (i < 0) i += 7;
-            switch (i) {
-                case 0: return "c";
-                case 1: return "d";
-                case 2: return "e";
-                case 3: return "f";
-                case 4: return "g";
-                case 5: return "a";
-                case 6: return "b";
-            }
-            return "e";
-        }
-        let octave = Math.floor(this.pitch / 7) + 1;
-        return f() + ((octave >= 0) ? "'".repeat(octave) : ",".repeat(-octave));
+        
     }
 }
 

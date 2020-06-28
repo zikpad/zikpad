@@ -1,30 +1,54 @@
+import { Pitch } from './Pitch.js';
 import { Score } from "./Score.js";
 import { Note } from "./Note.js";
 import { Voice } from "./Voice.js";
 
 export class Lilypond {
 
-    static lilyPitchToPitch(s: string): number {
-        s = s.trim();
-        let r = 0;
-        switch (s[0]) {
-            case "c": r = 0; break;
-            case "d": r = 1; break;
-            case "e": r = 2; break;
-            case "f": r = 3; break;
-            case "g": r = 4; break;
-            case "a": r = 5; break;
-            case "b": r = 6;
-        }
-        if (s.length == 1)
-            return r - 7;
-        else if (s[1] == "'")
-            return r - 7 + 7 * (s.length - 1);
-        else if (s[1] == ",")
-            return r - 7 - 7 * (s.length - 1);
 
-        alert("aïe")
-        return -1000;
+
+    private static lilypondPitchNameToValue(s: string): number {
+        switch (s) {
+            case "c": return 0;
+            case "d": return 1;
+            case "e": return 2;
+            case "f": return 3;
+            case "g": return 4;
+            case "a": return 5;
+            case "b": return 6;
+            default: throw "error";
+        }
+    }
+
+
+
+    private static lilyAccidentalToNumber(s: string): number {
+        if (s.startsWith("isis")) return 2;
+        if (s.startsWith("eses")) return -2;
+        if (s.startsWith("is")) return 1;
+        if (s.startsWith("es")) return -1;
+        return 0;
+    }
+
+    private static lilyOctaveShiftToNumber(s: string): number {
+        if (s.length == 0)
+            return -7;
+        else if (s[0] == "'")
+            return  - 7 + 7 * s.length;
+        else if (s[1] == ",")
+            return  - 7 - 7 * s.length;
+
+        throw "aïe";
+    }
+
+    static lilyPitchToPitch(s: string): Pitch {
+        s = s.trim();
+        let v = Lilypond.lilypondPitchNameToValue(s[0]);
+        s = s.substr(1);
+        let a = Lilypond.lilyAccidentalToNumber(s);
+
+        s = s.substr(Math.abs(a * 2));
+        return new Pitch(v + this.lilyOctaveShiftToNumber(s), a);
     }
 
     static getScore(score: Score, lilypond: string) {
@@ -145,7 +169,7 @@ export class Lilypond {
 
         let s = 0;
         for (let note of voice.notes) {
-            s += note.pitch;
+            s += note.pitch.value;
         }
         if (s >= 0)
             return "";
@@ -157,10 +181,13 @@ export class Lilypond {
 
 
 function test() {
-    if (Lilypond.lilyPitchToPitch("e") != 2 - 7) alert("aïe");
-    if (Lilypond.lilyPitchToPitch("e ") != 2 - 7) alert("aïe");
-    if (Lilypond.lilyPitchToPitch("e'") != 2) alert("aïe");
-    if (Lilypond.lilyPitchToPitch("e''") != 2 + 7) alert("aïe");
+    if (Lilypond.lilyPitchToPitch("e").value != 2 - 7) alert("aïe");
+    if (Lilypond.lilyPitchToPitch("e ").value != 2 - 7) alert("aïe");
+    if (Lilypond.lilyPitchToPitch("e'").value != 2) alert("aïe");
+    if (Lilypond.lilyPitchToPitch("e''").value != 2 + 7) alert("aïe");
+
+    if (Lilypond.lilyPitchToPitch("eis''").value != 2 + 7) alert("aïe value wrong");
+    if (Lilypond.lilyPitchToPitch("eis''").alteration != 1) alert("aïe accidental wrong");
 }
 
 

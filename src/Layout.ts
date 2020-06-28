@@ -1,3 +1,6 @@
+import { Pitch } from './Pitch.js';
+
+
 export class Layout {
     static readonly NOTERADIUS = 16;
     static readonly WIDTHONE = 800;
@@ -11,9 +14,17 @@ export class Layout {
     static readonly LANDMARKHEIGHT = 800;
     private static readonly XBEGINDEFAULT = 64;
 
-    static getY(pitch: number) { return this.BASELINE - Layout.NOTERADIUS * pitch; }
+    static getY(pitch: number | Pitch) {
+        let v: number;
+        if (pitch instanceof Pitch)
+            v = pitch.value;
+        else
+            v = pitch;
 
-    static getPitch(y: number) {
+        return this.BASELINE - Layout.NOTERADIUS * v;
+    }
+
+    static getPitchValue(y: number): number {
         return Math.round((this.BASELINE - y) / Layout.NOTERADIUS);
     }
 

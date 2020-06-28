@@ -75,11 +75,11 @@ export class Analyzer {
         }
 
         for (let note of this.voice.notes) if (!note.isSilence()) {
-            if (note.pitch == 0)
+            if (note.pitch.value == 0)
                 drawExtraLine(note.x, 0);
-            for (let i = -10; i >= note.pitch; i -= 2)
+            for (let i = -10; i >= note.pitch.value; i -= 2)
                 drawExtraLine(note.x, i);
-            for (let i = 10; i <= note.pitch; i += 2)
+            for (let i = 10; i <= note.pitch.value; i += 2)
                 drawExtraLine(note.x, i);
         }
 
