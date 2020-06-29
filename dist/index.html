@@ -1,0 +1,49 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="keyboardtyping.js" type="module"></script>
+  <script src="main.js" type="module"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+  
+  <div id="svg-wrapper">
+    <div>
+      <svg id="svg"></svg>
+      <button class="btn" id="delete" title="delete selected notes"><i class="fa fa-trash"></i></button>
+      <button class="btn" id="alterationUp" title="Accidental Up"><i class="fa fa-arrow-circle-up"></i></button>
+      <button class="btn" id="alterationDown" title="Accidental Down"><i class="fa fa-arrow-circle-down"></i></button>
+      <button class="btn" id="toggle" title="toggle selected notes into silence"><i class="fa fa-heart"></i></button>
+      <canvas width=32 height=32 id="microphoneInput" title=""></canvas>
+    </div>
+  </div>
+
+  <button class="btn" id="playButton" title="play"><i class="fa fa-play"></i></button>
+  <button class="btn" id="downloadLilypond" title="Download the score in the lilypond format"><i
+      class="fa fa-download"></i></button>
+  <div id="palette">
+    <div>
+      <button class="btnfixed" id="recordMicrophoneButton" title="Click = record via the microphone"><i
+          class="fa fa-microphone-slash"></i></button>
+      <button class="btnfixed" id="stopRecordMicrophoneButton" title="Click = Stop recording via the microphone"><i
+          class="fa fa-microphone"></i></button>
+      <div id="message"></div>
+    </div>
+    <div id="voiceButtonPalette">
+    </div>
+    <div>
+
+    </div>
+    <div id="lilypondPalette">
+      <button id="clear">Clear</button>
+      Lilypond code: <input id="lilypond" />
+      <button id="validate">validate!</button>
+    </div>
+  </div>
+
+</body>
+
+</html>
