@@ -33,9 +33,9 @@ export class InteractionSelection {
 
 
         if (this.svgRectangle) {
-            let x1 = Math.min(this.evtBegin.clientX, evt.clientX) + 1*document.getElementById("svg-wrapper").scrollLeft;
+            let x1 = Math.min(this.evtBegin.clientX, evt.clientX) + 1 * document.getElementById("svg-wrapper").scrollLeft;
             let y1 = Math.min(this.evtBegin.clientY, evt.clientY);
-            let x2 = Math.max(this.evtBegin.clientX, evt.clientX) + 1*document.getElementById("svg-wrapper").scrollLeft;
+            let x2 = Math.max(this.evtBegin.clientX, evt.clientX) + 1 * document.getElementById("svg-wrapper").scrollLeft;
             let y2 = Math.max(this.evtBegin.clientY, evt.clientY);
 
             this.x = x1;
@@ -69,13 +69,11 @@ export class InteractionSelection {
                 }
             console.log(s.length)
 
-            document.getElementById("svg").removeChild(this.svgRectangle);
+            if (document.getElementById("svg").contains(this.svgRectangle))
+                document.getElementById("svg").removeChild(this.svgRectangle);
             return s;
         }
         else
             return [];
     }
-
-
-
 }

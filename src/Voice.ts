@@ -6,7 +6,7 @@ export class Voice {
     isEmpty(): boolean {
         return this.notes.length == 0;
     }
-    
+
     getNotesBetween(t1: number, t2: number): Note[] {
         let result = [];
         for (let timeStep of this.timeSteps) {
@@ -50,13 +50,22 @@ export class Voice {
         this.timeSteps = getTimeSteps(this);
         this.draw();
         analyzer.analyze(this);
-       // (<HTMLInputElement>document.getElementById("lilypond")).value = analyzer.getLilypond();
+        // (<HTMLInputElement>document.getElementById("lilypond")).value = analyzer.getLilypond();
     }
 
     isTrioletStartingFrom(i) {
         return this.timeSteps.length - i > 3 && equalReal(this.timeSteps[i].duration, 0.25 / 3)
             && equalReal(this.timeSteps[i + 1].duration, 0.25 / 3)
             && equalReal(this.timeSteps[i + 2].duration, 0.25 / 3);
+    }
+
+
+    contains(x, pitch): boolean {
+        for (let note of this.notes) {
+            if (Math.abs(note.x - x) < 2 && (note.pitch.alteration == pitch.alteration) && (note.pitch.value == pitch.value))
+                return true;
+        }
+        return false;
     }
 }
 
