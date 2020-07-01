@@ -39,6 +39,7 @@ export class InteractionScore {
 
     private interactionSelection: InteractionSelection = undefined;
     private interactionRecordingMicrophone: InteractionRecordingMicrophone;
+    key: Pitch = new Pitch(0, 0);
 
 
     undo() { this.undoRedo.undo(); this.update(); ContextualMenu.hide(); }
@@ -66,7 +67,7 @@ export class InteractionScore {
 
             //document.getElementById("microphoneInputFreq").innerHTML = freq;
             let pitch = Harmony.freqToPitch(freq);
-
+            pitch = Harmony.enharmonic(pitch, this.key);
             if (this.selection.size == 0) {
                 if (!this.currentVoice.contains(this.interactionRecordingMicrophone.x, pitch))
                     this.do(new CommandAddNote(this.currentVoice, new Note(this.interactionRecordingMicrophone.x, pitch)));
@@ -103,6 +104,35 @@ export class InteractionScore {
             document.getElementById("voiceButtonPalette").appendChild(b);
 
         }
+
+
+
+
+
+        document.getElementById("keyButtonPalette").innerHTML = "";
+        let pitch = new Pitch(0, -1);
+        let quinte = new Pitch(4, 0);
+        for(let i = -7;  i <= 7; i++) {
+            let b = document.createElement("button");
+            b.classList.add("keyButton");
+            b.title = "switch in key " + pitch.lilypondName;
+            b.innerHTML = pitch.lilypondName;
+            const currentPitch = Harmony.modulo(Harmony.add(pitch, quinte));
+            document.getElementById("keyButtonPalette").appendChild(b);
+            b.onclick = () => {
+                this.key = currentPitch;
+
+                let command = new CommandGroup();
+                for (let note of this.selection) {
+                    command.commands.push(new CommandUpdateNote(note, note.x, Harmony.enharmonic(note.pitch, this.key)));
+                }
+                this.do(command);
+            }
+            pitch = currentPitch;
+        }
+
+
+
 
         document.getElementById("playButton").onclick =
             (evt) => {
@@ -353,7 +383,7 @@ export class InteractionScore {
                 this.selection = new Set();
             else if (!this.interactionRecordingMicrophone.isActive()) {
                 let note = new Note(evt.clientX + document.getElementById("svg-wrapper").scrollLeft,
-                    new Pitch(Layout.getPitchValue(evt.y), 0));
+                    Harmony.accidentalize(new Pitch(Layout.getPitchValue(evt.y), 0), this.key));
                 this.do(new CommandAddNote(this.currentVoice, note));
             }
             ContextualMenu.hide();

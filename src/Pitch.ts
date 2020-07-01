@@ -8,11 +8,21 @@ export class Pitch {
     }
 
 
+
+    get valueM(): number {
+        let x = this.value % 7;
+        if (x < 0) x += 7;
+        return x;
+    }
     get midiPitch(): number {
+        return 60 + this.nbHalfTones;
+    }
+
+
+
+    get nbHalfTones(): number {
         let f = () => {
-            let x = this.value % 7;
-            if (x < 0) x += 7;
-            switch (x) {
+            switch (this.valueM) {
                 case 0: return 0;
                 case 1: return 2;
                 case 2: return 4;
@@ -22,11 +32,11 @@ export class Pitch {
                 case 6: return 11;
             }
         }
-        return 60 + 12 * Math.floor(this.value / 7) + f() + this.alteration;
+        return 12 * Math.floor(this.value / 7) + f() + this.alteration;
     }
 
 
-    get name() {
+    get lilypondName() {
 
         let f = () => {
             let i = this.value % 7;
@@ -57,5 +67,11 @@ export class Pitch {
         let octave = Math.floor(this.value / 7) + 1;
         return f() + a() + ((octave >= 0) ? "'".repeat(octave) : ",".repeat(-octave));
     }
+
+
+    get name() {
+        return this.lilypondName;
+    }
+
 
 }

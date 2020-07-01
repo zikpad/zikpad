@@ -6,7 +6,7 @@ export class MicrophoneInput {
 
     readonly FFT_SIZE = 2048;
     readonly BUFF_SIZE = 2048;
-    readonly TRESHOLDCOUNT = 10;
+    readonly TRESHOLDCOUNT = 6;
 
     currentfreq = 0;
     fftcount = 0;

@@ -7,14 +7,14 @@ import { Drawing } from "./Drawing.js";
 type AlterationSymbol = "" | "b" | "#" | "x" | "bb";
 
 
-function alterationToSymbol(a: number) {
+function alterationToSymbol(a: number): AlterationSymbol {
     switch (a) {
         case -2: return "bb";
         case -1: return "b";
         case 0: return "";
         case 1: return "#";
         case 2: return "x";
-        default: return "";
+        default: throw `error ${a} is a wrong accidental`;
     }
 }
 
@@ -114,7 +114,7 @@ export class Note {
         if (this.isSilence())
             return "r";
         else
-            return this.pitch.name;
+            return this.pitch.lilypondName;
 
 
     }
