@@ -2,10 +2,11 @@ export class MicrophoneInput {
     public onNote: any = undefined;
     public onSound: any = undefined;
     public onError: any = undefined;
+    public onNoSound: any = undefined;
 
     readonly FFT_SIZE = 2048;
     readonly BUFF_SIZE = 2048;
-    readonly TRESHOLDCOUNT = 6;
+    readonly TRESHOLDCOUNT = 10;
 
     currentfreq = 0;
     fftcount = 0;
@@ -18,6 +19,7 @@ export class MicrophoneInput {
     script_processor_node = null;
     script_processor_fft_node = null;
     analyserNode = null;
+    private _isActive: boolean;
 
 
 
@@ -94,6 +96,7 @@ export class MicrophoneInput {
         }
 
         this._started = true;
+        this._isActive = true;
 
     }
 
@@ -101,6 +104,7 @@ export class MicrophoneInput {
     public stop() {
         this._started = false;
         this.gain_node.disconnect();
+        this._isActive = false;
     }
 
 
@@ -119,6 +123,11 @@ export class MicrophoneInput {
     }
 
 
+
+    public isActive() {
+        return this._isActive;
+    }
+
     private paint(array) {
         let canvas: HTMLCanvasElement = document.getElementById("microphoneInput") as HTMLCanvasElement;
         const WIDTH = canvas.width;
@@ -132,7 +141,11 @@ export class MicrophoneInput {
             context.lineTo(i * WIDTH / (array.length / 2), BASELINE - (array[i] - 128) * WIDTH / 2 / 128);
         context.stroke();
         let f = Math.min(this.TRESHOLDCOUNT, this.fftcount) / this.TRESHOLDCOUNT;
-        canvas.style.backgroundColor = `rgb(${255 - Math.round(255 * f)}, ${255 - Math.round(128 * f)}, ${255 - Math.round(255 * f)})`;
+
+        if (this.fftcount >= this.TRESHOLDCOUNT-1)
+            canvas.style.backgroundColor = "yellow";
+        else
+            canvas.style.backgroundColor = `rgb(${255 - Math.round(255 * f)}, ${255 - Math.round(128 * f)}, ${255 - Math.round(255 * f)})`;
     }
 
 
@@ -219,7 +232,7 @@ export class MicrophoneInput {
 
 
 
-       // document.getElementById("message").innerHTML = `force: ${max} freq: ${Math.round(freq)} count: ${this.fftcount}`;
+        // document.getElementById("message").innerHTML = `force: ${max} freq: ${Math.round(freq)} count: ${this.fftcount}`;
 
         if (max > THRESHOLD && Math.abs(this.currentfreq - freq) < 30) {
             this.fftcount++;
@@ -231,7 +244,8 @@ export class MicrophoneInput {
             this.fftcount = 0;
         }
 
-            
+        if (max <= THRESHOLD)
+            this.onNoSound();
 
         if (this.fftcount >= this.TRESHOLDCOUNT)
             return this.currentfreq
@@ -242,9 +256,11 @@ export class MicrophoneInput {
 
     private findNote(spectrum) {
         let freq = this.getMainFrequency(spectrum);
-        if (freq == undefined || freq < 50) { }
+        if (freq == undefined || freq < 50) {
+        }
         else {
             this.onNote(freq);
+            this.fftcount = 0; //note has been detected, counter reset to 0
         }
     }
 

@@ -49,7 +49,7 @@ circle:hover {
 }
 
 .selection {
-	/*animation: pulse 1s infinite;*/
+	animation: pulse 1s infinite;
 }
 
 
@@ -186,5 +186,5 @@ input {
 	width: 32px;
 	height: 32px;
 	border-radius: 16px;
-	border: solid 1px black;
+	border: dashed 2px black;
 }

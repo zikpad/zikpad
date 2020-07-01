@@ -14,7 +14,9 @@ export class Analyzer {
 
 
     computeTime(timeSteps: TimeStep[]) {
-        function getEnd(t) { return Math.floor(t) + 1; }
+        function getEnd(t) { 
+           // document.getElementById("message").innerHTML = t;
+            return Math.floor(t) + 1; }
 
         if (timeSteps.length == 0) return;
 

@@ -27,8 +27,6 @@ export class InteractionScore {
     private player: Player = undefined;
     dragCopyMade: boolean = false;
 
-    private currentX = Layout.getX(0);
-
     private interactionSelection: InteractionSelection = undefined;
     private interactionRecordingMicrophone: InteractionRecordingMicrophone;
 
@@ -38,33 +36,30 @@ export class InteractionScore {
 
         this.interactionRecordingMicrophone = new InteractionRecordingMicrophone();
 
+        this.interactionRecordingMicrophone.x = Layout.getX(0);
+
+
+        this.interactionRecordingMicrophone.onNoSound = (freq) => {
+            document.getElementById("microphoneInput").style.top = "" + (Layout.getY(new Pitch(20, 0)) - Layout.NOTERADIUS + 2);
+        }
+
         this.interactionRecordingMicrophone.onSound = (freq) => {
             let pitch = Harmony.freqToPitch(freq);
-
-            document.getElementById("microphoneInput").style.left = "" + 300;
-
-            if (this.selection.size == 1) {
-                for (let note of this.selection)
-                    document.getElementById("microphoneInput").style.left = "" + (note.x - Layout.NOTERADIUS);
-            }
-
-            if (this.selection.size == 0) {
-                document.getElementById("microphoneInput").style.left = "" + (this.currentX - Layout.NOTERADIUS);
-            }
             document.getElementById("microphoneInput").style.top = "" + (Layout.getY(pitch) - Layout.NOTERADIUS + 2);
         }
         this.interactionRecordingMicrophone.onNote = (freq) => {
 
             //document.getElementById("microphoneInputFreq").innerHTML = freq;
             let pitch = Harmony.freqToPitch(freq);
-            if (this.selection.size == 1) {
-                for (let note of this.selection)
-                    note.update(note.x, pitch);
-            }
 
-            if (this.selection.size == 0) {
-                this.currentVoice.addNote(new Note(this.currentX, pitch));
-            }
+            if(this.selection.size == 0)
+                this.currentVoice.addNote(new Note(this.interactionRecordingMicrophone.x, pitch));
+            else if(this.selection.size == 1)
+                for(let note of this.selection)
+                    note.update(note.x, pitch);
+
+            this.update();
+
         };
 
 
@@ -171,8 +166,11 @@ export class InteractionScore {
         }
 
         if (this.selection.size >= 1)
-            for (let note of this.selection)
+            for (let note of this.selection) {
                 note.svgCircle.classList.add("selection");
+                this.interactionRecordingMicrophone.x = note.x;
+            }
+
 
         document.onkeydown = (evt) => {
             if (evt.keyCode == KeyEvent.DOM_VK_DELETE) {
@@ -198,7 +196,8 @@ export class InteractionScore {
         if (this.interactionSelection == undefined)
             this.interactionSelection = new InteractionSelection(this.score, evt);
 
-        this.currentX = evt.clientX;
+        this.interactionRecordingMicrophone.x = evt.clientX;
+
     }
 
 
@@ -296,7 +295,7 @@ export class InteractionScore {
             (!this.interactionSelection || !this.interactionSelection.isActive())) {
             if (this.selection.size > 0)
                 this.selection = new Set();
-            else {
+            else if (!this.interactionRecordingMicrophone.isActive()) {
                 let note = new Note(evt.clientX + document.getElementById("svg-wrapper").scrollLeft,
                     new Pitch(Layout.getPitchValue(evt.y), 0));
                 this.currentVoice.addNote(note);

@@ -25,11 +25,11 @@ export class Layout {
     }
 
     static getPitchValue(y: number): number {
-        return Math.round((this.BASELINE - y) / Layout.NOTERADIUS);
+        return  Math.round((this.BASELINE - y) / Layout.NOTERADIUS);
     }
 
     static getT(x: number) {
-        return (x - Layout.XBEGINDEFAULT) / (Layout.WIDTHONE - Layout.XBEGINDEFAULT);
+        return Math.max(0, (x - Layout.XBEGINDEFAULT) / (Layout.WIDTHONE - Layout.XBEGINDEFAULT));
     }
 
     static getX(t) {

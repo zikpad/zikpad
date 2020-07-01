@@ -2,7 +2,7 @@ export class Pitch {
     value: number;
     alteration: number;
 
-    constructor(value: number, alteration) {
+    constructor(value: number, alteration: number) {
         this.value = value;
         this.alteration = alteration;
     }
