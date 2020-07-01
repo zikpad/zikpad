@@ -81,6 +81,15 @@ app.on('ready', () => {
             ]
         },
         {
+            label: 'Edit',
+            submenu: [
+                { label: 'Undo', accelerator: "Ctrl+Z", click() { win.webContents.send("undo"); } },
+                { label: 'Redo', accelerator: "Ctrl+Shift+Z", click() { win.webContents.send("redo"); } },
+            ]
+        },
+
+
+        {
             label: "Help",
             submenu: [{
                 label: 'About...', click() {
@@ -94,7 +103,7 @@ app.on('ready', () => {
     Menu.setApplicationMenu(menu);
     win.loadFile('dist/index.html')
     
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
 
     win.on('close', function (e) {

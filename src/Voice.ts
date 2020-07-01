@@ -41,6 +41,7 @@ export class Voice {
 
     addNote(note: Note) {
         note.setColor(this.color);
+        note.setVoice(this);
         this.notes.push(note);
     }
 

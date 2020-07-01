@@ -142,7 +142,7 @@ export class MicrophoneInput {
         context.stroke();
         let f = Math.min(this.TRESHOLDCOUNT, this.fftcount) / this.TRESHOLDCOUNT;
 
-        if (this.fftcount >= this.TRESHOLDCOUNT-1)
+        if (this.fftcount >= this.TRESHOLDCOUNT - 1)
             canvas.style.backgroundColor = "yellow";
         else
             canvas.style.backgroundColor = `rgb(${255 - Math.round(255 * f)}, ${255 - Math.round(128 * f)}, ${255 - Math.round(255 * f)})`;
@@ -184,6 +184,12 @@ export class MicrophoneInput {
 
         let peeks = getPeeksAndClean(spectrum);
 
+        if (peeks.length == 0) {
+            this.onNoSound();
+            return undefined;
+        }
+            
+
         function findPeek(spectrum, freq) {
             let i = Math.round(freq / SPECTRUMFACTOR);
             let best = i;
@@ -196,34 +202,34 @@ export class MicrophoneInput {
 
 
         for (let j = 0; j < peeks.length; j++) {
-            let bestScore = 0;
+            let bestMark = 0;
             let bestDivFond = 1;
             for (let divFond = 2; j / divFond > 1; divFond++) {
                 //test the fondamental to be peeks[j].freq / divFond
-                let score = 0;
+                let mark = 0;
                 if (findPeek(spectrum, peeks[j].freq / divFond) != 0) {
 
                     for (let n = 1; n < divFond && n < 8; n++) {
-                        score += findPeek(spectrum, peeks[j].freq * n / divFond);
+                        mark += findPeek(spectrum, peeks[j].freq * n / divFond);
                     }
 
                 }
 
-                if (score > bestScore) {
-                    bestScore = score;
+                if (mark > bestMark) {
+                    bestMark = mark;
                     bestDivFond = divFond;
                 }
             }
             peeks[j].divFond = bestDivFond;
-            peeks[j].score = bestScore;
+            peeks[j].mark = bestMark;
         }
 
 
         let jmax = 0;
         let max = 0;
         for (let j = 0; j < peeks.length; j++) {
-            if (max < peeks[j].score) {
-                max = peeks[j].score;
+            if (max < peeks[j].mark) {
+                max = peeks[j].mark;
                 jmax = j;
             }
         }
@@ -269,9 +275,9 @@ export class MicrophoneInput {
 
 
 class Peek {
-    public freq: number;
+    public freq: number = 0;
     public divFond: number = 1;
-    public score: number;
+    public mark: number;
 
     get freqFond(): number {
         return this.freq / this.divFond;

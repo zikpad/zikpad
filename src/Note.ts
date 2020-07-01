@@ -1,3 +1,4 @@
+import { Voice } from './Voice';
 import { Pitch } from './Pitch.js';
 import { Layout } from "./Layout.js";
 import { Drawing } from "./Drawing.js";
@@ -19,10 +20,9 @@ function alterationToSymbol(a: number) {
 
 
 export class Note {
-
-    x: number;
-    pitch: Pitch;
     private silence: boolean = false;
+    public voice: Voice;
+
     color: string = "black";
     _alteration: number = 0;
 
@@ -31,7 +31,9 @@ export class Note {
         this.svgCircle.setAttribute('stroke', this.color);
     }
 
-
+    setVoice(voice) {
+        this.voice = voice;
+    }
 
     get alteration() {
         return this.pitch.alteration;
@@ -41,7 +43,7 @@ export class Note {
     set alteration(alt) {
         this.pitch.alteration = alt;
         this.svtTextAlteration.textContent = alterationToSymbol(this.alteration);
-       
+
     }
 
 
@@ -49,8 +51,7 @@ export class Note {
     public svgCircle: SVGCircleElement;
     private svtTextAlteration: SVGTextElement;
 
-    constructor(x: number, pitch: Pitch) {
-        this.x = x, this.pitch = pitch;
+    constructor(public x: number, public pitch: Pitch) {
         this.svgCircle = Drawing.circle(this.x, this.y, Layout.NOTERADIUS);
         this.svtTextAlteration = Drawing.text(this.x - Layout.NOTERADIUS * 2, this.y + Layout.NOTERADIUS / 2, alterationToSymbol(this.alteration));
 
@@ -112,10 +113,10 @@ export class Note {
     get pitchName(): string {
         if (this.isSilence())
             return "r";
-        else 
+        else
             return this.pitch.name;
 
-        
+
     }
 }
 
