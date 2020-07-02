@@ -171,8 +171,17 @@ input {
 	top: 10px;
 }
 
-#recordMicrophoneButton {}
+#recordMicrophoneButton {
+	left: 70px;
+	top: 10px;
+}
 
+
+
+#stopRecordMicrophoneButton {
+	left: 70px;
+	top: 10px;
+}
 
 #downloadLilypond {
 	left: 130px;

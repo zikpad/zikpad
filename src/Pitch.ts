@@ -70,7 +70,8 @@ export class Pitch {
 
 
     get name() {
-        return this.lilypondName;
+        return this.lilypondName.toUpperCase().replace("'", "").replace("ISIS", "x")
+        .replace("ESES", "bb").replace("IS", "#").replace("ES", "b");
     }
 
 

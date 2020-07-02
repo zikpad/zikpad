@@ -108,31 +108,41 @@ export class InteractionScore {
 
 
 
-
-        document.getElementById("keyButtonPalette").innerHTML = "";
+        const keysSelect = document.getElementById("keys") as HTMLSelectElement;
+        keysSelect.innerHTML = "";
+        
+        let pitchs = [];
         let pitch = new Pitch(0, -1);
         let quinte = new Pitch(4, 0);
-        for(let i = -7;  i <= 7; i++) {
-            let b = document.createElement("button");
-            b.classList.add("keyButton");
-            b.title = "switch in key " + pitch.lilypondName;
-            b.innerHTML = pitch.lilypondName;
-            const currentPitch = Harmony.modulo(Harmony.add(pitch, quinte));
-            document.getElementById("keyButtonPalette").appendChild(b);
-            b.onclick = () => {
-                this.key = currentPitch;
 
-                let command = new CommandGroup();
-                for (let note of this.selection) {
-                    command.commands.push(new CommandUpdateNote(note, note.x, Harmony.enharmonic(note.pitch, this.key)));
-                }
-                this.do(command);
-            }
+        for (let i = -7; i <= 7; i++) {
+            let option = document.createElement("option");
+
+            option.classList.add("keyButton");
+            option.value = i.toString();
+            pitchs[i] = pitch;
+            // b.title = "switch in key " + pitch.name + " major";
+            option.innerHTML = pitch.name + " major";
+
+            if (i == 0)
+                option.selected = true;
+
+            const currentPitch = Harmony.modulo(Harmony.add(pitch, quinte));
+
+            keysSelect.appendChild(option);
             pitch = currentPitch;
         }
 
 
+        keysSelect.onchange = () => {
+            this.key = pitchs[parseInt(keysSelect.options[keysSelect.selectedIndex].value)];
 
+            let command = new CommandGroup();
+            for (let note of this.selection) {
+                command.commands.push(new CommandUpdateNote(note, note.x, Harmony.enharmonic(note.pitch, this.key)));
+            }
+            this.do(command);
+        }
 
         document.getElementById("playButton").onclick =
             (evt) => {
