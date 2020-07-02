@@ -109,6 +109,7 @@ export class Note {
     }
 
     get y() { return Layout.getY(this.pitch); }
+    get t() { return Layout.getT(this.x);}
 
     get pitchName(): string {
         if (this.isSilence())

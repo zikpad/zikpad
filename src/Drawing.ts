@@ -1,8 +1,8 @@
 export class Drawing {
     static text(x: number, y: number, s: string) {
         let aText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        aText.setAttribute("x", ""+x);
-        aText.setAttribute("y", ""+y);
+        aText.setAttribute("x", "" + x);
+        aText.setAttribute("y", "" + y);
         aText.innerHTML = s;
         aText.setAttribute('stroke', "black");
         aText.setAttribute('fill', "black");
@@ -34,7 +34,7 @@ export class Drawing {
         document.getElementById("svg").appendChild(aLine);
         return aLine;
     }
-    
+
     static line(x1, y1, x2, y2) {
         var aLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         aLine.setAttribute('x1', x1);
@@ -70,5 +70,20 @@ export class Drawing {
         aRect.setAttribute('stroke-width', "8");
         document.getElementById("svg").appendChild(aRect);
         return aRect;
+    }
+
+    static brisureX(x: number) {
+        var e = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        const W = 8;
+        const H = 50;
+
+        let points = "";
+
+        for (let i = 0; i < 20; i++)
+            points += ` ${i % 2 == 0 ? x + W : x - W},${i * H}`;
+
+        e.setAttribute('points', points);
+        document.getElementById("svg").appendChild(e);
+        return e;
     }
 }

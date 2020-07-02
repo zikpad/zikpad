@@ -103,7 +103,7 @@ app.on('ready', () => {
     Menu.setApplicationMenu(menu);
     win.loadFile('dist/index.html')
     
-    win.webContents.openDevTools()
+   // win.webContents.openDevTools()
 
 
     win.on('close', function (e) {

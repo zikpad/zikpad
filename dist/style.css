@@ -197,3 +197,21 @@ input {
 	border-radius: 16px;
 	border: dashed 2px black;
 }
+
+
+
+
+
+.delete {
+	fill: gray;
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+
+polyline {
+	fill: none;
+	stroke: rgb(44, 192, 218);
+	stroke-width: 4px;
+	pointer-events: none;
+}
