@@ -82,6 +82,7 @@ export class Harmony {
      * @param pitch 
      * @param key 
      * @return the pitch with the accidental that is natural in the key
+     * @example accidentalize(C, E) => C# because C has a # in E major
      */
     static accidentalize(pitch: Pitch, key: Pitch): Pitch {
         return new Pitch(pitch.value, Harmony.getAccidentals(key)[pitch.valueM]);

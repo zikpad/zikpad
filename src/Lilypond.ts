@@ -35,10 +35,10 @@ export class Lilypond {
             return -7;
         else if (s[0] == "'")
             return  - 7 + 7 * s.length;
-        else if (s[1] == ",")
+        else if (s[0] == ",")
             return  - 7 - 7 * s.length;
 
-        throw "aïe";
+        throw "lilyOctaveShiftToNumber: I do not understand " + s;
     }
 
     static lilyPitchToPitch(s: string): Pitch {

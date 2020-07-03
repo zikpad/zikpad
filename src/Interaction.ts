@@ -26,7 +26,7 @@ export class InteractionScore {
 
     private undoRedo = new UndoRedo();
     private selection: Set<Note> = new Set();
-    
+
     private currentVoice: Voice;
 
     private draggedNote: Note;
@@ -351,7 +351,9 @@ export class InteractionScore {
                     for (let note of this.selection) {
                         let dx = coord.x - this.offset.get(note).x;
                         let dy = coord.y - this.offset.get(note).y;
-                        this.dragCommand.commands.push(new CommandUpdateNote(note, dx, new Pitch(Layout.getPitchValue(dy), 0)));
+                        this.dragCommand.commands.push(
+                            new CommandUpdateNote(note, dx, Harmony.accidentalize(
+                                new Pitch(Layout.getPitchValue(dy), 0), this.key)));
                     }
                 }
                 else {
@@ -359,7 +361,8 @@ export class InteractionScore {
                     for (let note of this.selection) {
                         let dx = coord.x - this.offset.get(note).x;
                         let dy = coord.y - this.offset.get(note).y;
-                        this.dragCommand.commands.push(new CommandUpdateNote(note, dx, new Pitch(Layout.getPitchValue(dy), 0)));
+                        this.dragCommand.commands.push(new CommandUpdateNote(note, dx,
+                            Harmony.accidentalize(new Pitch(Layout.getPitchValue(dy), 0), this.key)));
                     }
                 }
 
@@ -378,8 +381,9 @@ export class InteractionScore {
                     this.dragCommand.commands[i] :
                     this.dragCommand.commands[this.selection.size + i];
 
-                note.update(dx, new Pitch(Layout.getPitchValue(dy), 0));
-                (command as CommandUpdateNote).update(dx, new Pitch(Layout.getPitchValue(dy), 0));
+                let pitch = Harmony.accidentalize(new Pitch(Layout.getPitchValue(dy), 0), this.key);
+                note.update(dx, pitch);
+                (command as CommandUpdateNote).update(dx, pitch);
                 i++;
             }
 
@@ -393,8 +397,8 @@ export class InteractionScore {
 
     endDrag(evt) {
 
-        if(this.interactionInsertTime.isActive) {
-            this.do(this.interactionInsertTime.stop()); 
+        if (this.interactionInsertTime.isActive) {
+            this.do(this.interactionInsertTime.stop());
         }
         //selection rectangle
         else if (this.interactionSelection && this.interactionSelection.isActive()) {
