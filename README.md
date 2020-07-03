@@ -3,6 +3,10 @@
 Zikpad is an open-source project to write music. The tool automatically detects the rhythm. It saves Lilypond files. You may try the tool here: https://zikpad.github.io/
 
 
+[[]]
+![Screenshot](./screenshot.png")
+
+
 # Local installation and Compile
 
 https://zestedesavoir.com/tutoriels/996/vos-applications-avec-electron/
