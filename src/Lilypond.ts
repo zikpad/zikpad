@@ -187,7 +187,7 @@ function test() {
     if (Lilypond.lilyPitchToPitch("e''").value != 2 + 7) alert("aïe");
 
     if (Lilypond.lilyPitchToPitch("eis''").value != 2 + 7) alert("aïe value wrong");
-    if (Lilypond.lilyPitchToPitch("eis''").alteration != 1) alert("aïe accidental wrong");
+    if (Lilypond.lilyPitchToPitch("eis''").accidental != 1) alert("aïe accidental wrong");
 }
 
 

@@ -75,7 +75,7 @@ export class Harmony {
     static add(pitch1: Pitch, pitch2: Pitch): Pitch {
         let result = new Pitch(pitch1.value + pitch2.value, 0);
         let nbHalfTone = result.nbHalfTones - pitch1.nbHalfTones;
-        result.alteration = pitch2.nbHalfTones - nbHalfTone;
+        result.accidental = pitch2.nbHalfTones - nbHalfTone;
         return result;
     }
 
@@ -85,7 +85,7 @@ export class Harmony {
  * @returns the same pitch but in the normal octave
  */
     static modulo(pitch: Pitch): Pitch {
-        return new Pitch(pitch.value % 7, pitch.alteration);
+        return new Pitch(pitch.value % 7, pitch.accidental);
     }
 
 
@@ -97,7 +97,7 @@ export class Harmony {
  * @returns the same pitch but in the key (e.g. G# in Eb is Ab)
  */
     static enharmonic(pitch: Pitch, key: Pitch): Pitch {
-        let pitch0 = Harmony.add(pitch, new Pitch(-key.value, -key.alteration));
+        let pitch0 = Harmony.add(pitch, new Pitch(-key.value, -key.accidental));
         let pitch0e = Harmony.midiPitchToPitch(pitch0.nbHalfTones);
         return Harmony.add(pitch0e, key);
     }
@@ -112,7 +112,7 @@ export class Harmony {
         let array = [];
         for (let i = 0; i < 7; i++) {
             let newPitch = Harmony.modulo(Harmony.add(new Pitch(i, 0), key));
-            array[newPitch.value] = newPitch.alteration;
+            array[newPitch.value] = newPitch.accidental;
         }
         console.log(key)
         console.log(array)

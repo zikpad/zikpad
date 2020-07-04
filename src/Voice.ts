@@ -1,6 +1,7 @@
 import { Note } from "./Note.js";
 import { Analyzer } from "./Analyzer.js";
 import { Layout } from "./Layout.js";
+import { Pitch } from "./Pitch.js";
 
 export class Voice {
     isEmpty(): boolean {
@@ -60,9 +61,9 @@ export class Voice {
     }
 
 
-    contains(x, pitch): boolean {
+    contains(x, pitch: Pitch): boolean {
         for (let note of this.notes) {
-            if (Math.abs(note.x - x) < 2 && (note.pitch.alteration == pitch.alteration) && (note.pitch.value == pitch.value))
+            if (Math.abs(note.x - x) < 2 && (note.pitch.accidental == pitch.accidental) && (note.pitch.value == pitch.value))
                 return true;
         }
         return false;

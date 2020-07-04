@@ -1,11 +1,6 @@
 export class Pitch {
-    value: number;
-    alteration: number;
 
-    constructor(value: number, alteration: number) {
-        this.value = value;
-        this.alteration = alteration;
-    }
+    constructor(public value: number, public accidental: number) { }
 
 
 
@@ -32,7 +27,7 @@ export class Pitch {
                 case 6: return 11;
             }
         }
-        return 12 * Math.floor(this.value / 7) + f() + this.alteration;
+        return 12 * Math.floor(this.value / 7) + f() + this.accidental;
     }
 
 
@@ -55,7 +50,7 @@ export class Pitch {
 
 
         let a = () => {
-            switch (this.alteration) {
+            switch (this.accidental) {
                 case -2: return "eses";
                 case -1: return "es";
                 case 0: return "";
@@ -71,7 +66,7 @@ export class Pitch {
 
     get name() {
         return this.lilypondName.toUpperCase().replace("'", "").replace("ISIS", "x")
-        .replace("ESES", "bb").replace("IS", "#").replace("ES", "b");
+            .replace("ESES", "bb").replace("IS", "#").replace("ES", "b");
     }
 
 

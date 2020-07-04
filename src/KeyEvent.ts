@@ -1,4 +1,6 @@
-
+/**
+ * this file contains the key code for the keyboard event
+ */
 export const KeyEvent = {
     DOM_VK_CANCEL: 3,
     DOM_VK_HELP: 6,

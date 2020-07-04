@@ -169,8 +169,8 @@ export class InteractionScore {
 
         document.getElementById("delete").onclick = () => { this.actionDelete(); };
         document.getElementById("toggle").onclick = () => { this.actionToggle(); };
-        document.getElementById("alterationUp").onclick = () => { this.actionAlterationUp(); };
-        document.getElementById("alterationDown").onclick = () => { this.actionAlterationDown(); };
+        document.getElementById("accidentalUp").onclick = () => { this.actionAccidentalUp(); };
+        document.getElementById("accidentalDown").onclick = () => { this.actionAccidentalDown(); };
 
         this.setup();
     }
@@ -200,17 +200,17 @@ export class InteractionScore {
 
 
 
-    actionAlterationUp() {
+    actionAccidentalUp() {
         let command = new CommandGroup();
         for (let note of this.selection)
-            command.push(new CommandUpdateNote(note, note.x, new Pitch(note.pitch.value, Math.min(2, note.alteration + 1))));
+            command.push(new CommandUpdateNote(note, note.x, new Pitch(note.pitch.value, Math.min(2, note.accidental + 1))));
         this.doKeepMenu(command);
     }
 
-    actionAlterationDown() {
+    actionAccidentalDown() {
         let command = new CommandGroup();
         for (let note of this.selection)
-            command.push(new CommandUpdateNote(note, note.x, new Pitch(note.pitch.value, Math.max(-2, note.alteration - 1))));
+            command.push(new CommandUpdateNote(note, note.x, new Pitch(note.pitch.value, Math.max(-2, note.accidental - 1))));
         this.doKeepMenu(command);
     }
 
