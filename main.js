@@ -1,18 +1,15 @@
-//const electron = require('electron');
+/**
+ * Main file to be launched by Electron
+ * The command line "electron ." will launch this file
+ */
+
 const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron')
 const fs = require('fs');
-//const { ipcMain } = require('electron');
-//const app = electron.app;
-//const BrowserWindow = electron.BrowserWindow;
-let { PythonShell } = require('python-shell')
-//https://www.techiediaries.com/python-electron-tutorial/
 
-
+const DEBUGMODE = false;
 
 let win = null;
 let filename = undefined;
-
-
 
 function newDocument() {
     filename = undefined;
@@ -20,22 +17,18 @@ function newDocument() {
     win.webContents.send("new");
 }
 
-
-
 function openDocument() {
     let files = dialog.showOpenDialogSync({ title: "Open file", filters: [{ name: "Lilypond file", extensions: "ly" }] });
     openFile(files[0]);
-    
+
 }
 
-
-function openFile(filename){
+function openFile(filename) {
     win.title = "Zikpad - " + filename;
     fs.readFile(filename, 'utf8', (err, data) => {
         win.webContents.send("open", data)
     });
 }
-
 
 function saveDocument() {
     if (filename == undefined)
@@ -43,7 +36,6 @@ function saveDocument() {
     else
         win.webContents.send("save");
 }
-
 
 function saveAsDocument() {
     let newFilename = dialog.showSaveDialogSync({ title: "Save file", filters: [{ name: "Lilypond file", extensions: "ly" }] });
@@ -54,12 +46,9 @@ function saveAsDocument() {
     saveDocument();
 }
 
-
-
-
 app.on('ready', () => {
     ipcMain.on("typing", (event, arg) => { typing(arg) })
-    ipcMain.on("open", (event, arg) => {openFile(arg)});
+    ipcMain.on("open", (event, arg) => { openFile(arg) });
     ipcMain.on("save", (event, arg) => { fs.writeFileSync(filename, arg) })
 
     win = new BrowserWindow({
@@ -68,9 +57,7 @@ app.on('ready', () => {
         height: 850,
         //   icon: 'assets/zds.png',
         title: 'Zikpad',
-        webPreferences: {
-            nodeIntegration: true
-        },
+        webPreferences: { nodeIntegration: true },
         movable: false
     });
 
@@ -93,8 +80,6 @@ app.on('ready', () => {
                 { label: 'Redo', accelerator: "Ctrl+Shift+Z", click() { win.webContents.send("redo"); } },
             ]
         },
-
-
         {
             label: "Help",
             submenu: [{
@@ -108,10 +93,8 @@ app.on('ready', () => {
 
     Menu.setApplicationMenu(menu);
     win.loadFile('dist/index.html')
-    
-    win.webContents.openDevTools()
 
-
+    if(DEBUGMODE) win.webContents.openDevTools()
 
     win.on('close', function (e) {
         let choice = require('electron').dialog.showMessageBoxSync(this,
@@ -130,8 +113,10 @@ app.on('ready', () => {
 });
 
 
-
-
+//commented code that corresponds to typing the Lilypond code in an other software
+/*
+let { PythonShell } = require('python-shell')
+//https://www.techiediaries.com/python-electron-tutorial/
 
 
 function typing(str) {
@@ -144,3 +129,4 @@ function typing(str) {
         console.log('results', results);
     });
 }
+*/

@@ -1,23 +1,16 @@
+/**
+ * This file will be transformed in the main.js included in dist/index.html
+ */
+
 import { KeyEvent } from './src/KeyEvent.js';
 import { Lilypond } from './src/Lilypond.js';
 import { OpenFileDragDrop } from './src/OpenFileDragDrop.js';
-
-
-//import Vex from 'vexflow';
-//const VF = Vex.Flow;
-
-// Create an SVG renderer and attach it to the DIV element named "vf".
 
 import { InteractionScore } from "./src/Interaction.js"
 import { Score } from "./src/Score.js";
 import { Layout } from "./src/Layout.js";
 
-//const { ipcRenderer } = require('electron')
-//const { ipcRenderer } = require('electron')
-
-
 window.onload = init;
-
 
 /**
  * when the window is resized
@@ -27,16 +20,8 @@ function resize() {
     (window.innerHeight - document.getElementById("palette").clientHeight - 16).toString();
 }
 
-
-
 let score = new Score();
 let interactionScore;
-
-
-
-
-
-
 
 function init() {
   score = new Score();
@@ -97,8 +82,6 @@ function init() {
         init();
         Lilypond.getScore(score, <string>reader.result);
         interactionScore = new InteractionScore(score);
-
-
       });
 
       reader.readAsText(file, 'UTF-8');
@@ -108,11 +91,15 @@ function init() {
 
 }
 
-
-
-function download(filename, text) {
+/**
+ * 
+ * @param filename 
+ * @param textContent 
+ * @fires (for online version) it makes start a download of a file called filename whose content is textContent
+ */
+function download(filename, textContent) {
   var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(textContent));
   element.setAttribute('download', filename);
 
   element.style.display = 'none';
@@ -122,6 +109,4 @@ function download(filename, text) {
 
   document.body.removeChild(element);
 }
-
-// Start file download.
 

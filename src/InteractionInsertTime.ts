@@ -60,7 +60,7 @@ export class InteractionInsertTime {
             //go back temporary to the initial state 
             for (let note of this.notes) {
                 note.update(note.x - dx, note.pitch);
-                command.commands.push(new CommandUpdateNote(note, note.x + dx, note.pitch));
+                command.push(new CommandUpdateNote(note, note.x + dx, note.pitch));
             }
 
         }
@@ -71,9 +71,9 @@ export class InteractionInsertTime {
             for (let voice of this.score.voices)
                 for (let note of voice.notes) {
                     if (note.x > this.x) {
-                        command.commands.push(new CommandUpdateNote(note, note.x - dx, note.pitch));
+                        command.push(new CommandUpdateNote(note, note.x - dx, note.pitch));
                     } else if (this.x2 < note.x && note.x < this.x) {
-                        command.commands.push(new CommandDeleteNote(note));
+                        command.push(new CommandDeleteNote(note));
                     }
                 }
 

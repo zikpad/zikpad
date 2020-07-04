@@ -14,7 +14,10 @@ export class Analyzer {
         this._draw();
     }
 
-
+    /**
+     * 
+     * @param timeSteps an array of timeSteps. Each timestep is a collection of notes played at the same time.
+     */
     computeTime(timeSteps: TimeStep[]) {
         function getEndByDefault(t) { return Math.floor(t) + 1; }
 
@@ -31,7 +34,9 @@ export class Analyzer {
 
 
 
-
+    /**
+     * draw the extra information of the rhythm!
+     */
     _draw() {
         function drawRythmLine(timeStep: TimeStep) {
             if (timeStep.duration >= 0.25)
@@ -91,7 +96,12 @@ export class Analyzer {
 
 
 
-
+/**
+ * 
+ * @param dt 
+ * @returns the real duration corresponding to dt. (E.g. if dt == 1, returns 1 (whole note
+ * if dt is almost 1/2, returns 1/2 etc.)
+ */
 function getDuration(dt: number): number {
     let score = 1000000;
     let result = 1;
@@ -119,7 +129,12 @@ function getDuration(dt: number): number {
 
 
 
-
+/**
+ * 
+ * @param v 
+ * @param v2
+ * @returns true if v and v2 are (almost) equal 
+ */
 function equalReal(v, v2) {
     return Math.abs(v - v2) < 0.001;
 }
