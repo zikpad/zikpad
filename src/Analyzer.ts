@@ -1,8 +1,10 @@
-import { Note } from './Note.js';
 import { Drawing } from './Drawing.js';
 import { Voice, TimeStep } from "./Voice.js";
 import { Layout } from "./Layout.js";
 
+/**
+ * this class analyses a voice and infers the rhythm.
+ */
 export class Analyzer {
     private voice: Voice;
 
@@ -14,11 +16,7 @@ export class Analyzer {
 
 
     computeTime(timeSteps: TimeStep[]) {
-        function getEnd(t) { 
-           // document.getElementById("message").innerHTML = t;
-            return Math.floor(t) + 1; }
-
-        if (timeSteps.length == 0) return;
+        function getEndByDefault(t) { return Math.floor(t) + 1; }
 
         for (let ts of timeSteps)
             ts.t = Layout.getT(ts.x);
@@ -27,7 +25,7 @@ export class Analyzer {
             if (i < timeSteps.length - 1)
                 timeSteps[i].duration = getDuration(timeSteps[i + 1].t - timeSteps[i].t);
             else
-                timeSteps[i].duration = getDuration(getEnd(timeSteps[i].t) - timeSteps[i].t);
+                timeSteps[i].duration = getDuration(getEndByDefault(timeSteps[i].t) - timeSteps[i].t);
         }
     }
 
