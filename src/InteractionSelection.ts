@@ -2,6 +2,9 @@ import { Drawing } from './Drawing.js';
 import { Score } from './Score.js';
 import { Note } from './Note.js';
 
+/**
+ * handle the selection
+ */
 export class InteractionSelection {
 
     private readonly score: Score;

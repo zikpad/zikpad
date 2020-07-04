@@ -8,6 +8,10 @@ import { Layout } from "./Layout.js";
 import { Command } from "./Command.js";
 import { Note } from './Note.js';
 
+
+/**
+ * handle the tool to insert (or remove) time between notes
+ */
 export class InteractionInsertTime {
 
     private x: number = undefined;
