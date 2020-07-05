@@ -37,6 +37,7 @@ export class Score {
 function clear() {
     document.getElementById("svg").innerHTML = "";
     document.getElementById("svg").appendChild(newRect(0, 0, Layout.WIDTH, Layout.HEIGHT));
+    document.getElementById("data").innerHTML = "";
 }
 
 

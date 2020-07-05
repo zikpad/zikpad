@@ -52,7 +52,7 @@ function init() {
     ipc.on("redo", () => interactionScore.redo());
 
     new OpenFileDragDrop((file: File) => {
-      ipc.send("open", file.path);
+      ipc.send("open",(<any> file).path);
     });
 
   }
@@ -75,7 +75,7 @@ function init() {
 
 
     new OpenFileDragDrop((file: File) => {
-      console.log("Open file " + file.path)
+      console.log("Open file " + file.name)
       let reader = new FileReader();
 
       reader.addEventListener('load', function () {

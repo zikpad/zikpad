@@ -4,16 +4,16 @@ import { Layout } from "./Layout.js";
 import { Drawing } from "./Drawing.js";
 
 
-type AccidentalSymbol = "" | "b" | "#" | "x" | "bb";
+type AccidentalSymbol = "" | "♭" | "♯" | "𝄪" | "𝄫";
 
 
 function accidentalToSymbol(a: number): AccidentalSymbol {
     switch (a) {
-        case -2: return "bb";
-        case -1: return "b";
+        case -2: return "𝄫";
+        case -1: return "♭";
         case 0: return "";
-        case 1: return "#";
-        case 2: return "x";
+        case 1: return "♯";
+        case 2: return "𝄪";
         default: throw `error ${a} is a wrong accidental`;
     }
 }
@@ -27,7 +27,7 @@ export class Note {
 
     setColor(color: string) {
         this.color = color;
-        this.svgCircle.setAttribute('stroke', this.color);
+        this.domElement.setAttribute('stroke', this.color);
     }
 
     setVoice(voice) {
@@ -41,25 +41,29 @@ export class Note {
 
     set accidental(accidental) {
         this.pitch.accidental = accidental;
-        this.svtTextAccidental.textContent = accidentalToSymbol(this.accidental);
+        this.svgTextAccidental.textContent = accidentalToSymbol(this.accidental);
 
     }
 
 
 
-    public svgCircle: SVGCircleElement;
-    private svtTextAccidental: SVGTextElement;
+    public domElement: SVGCircleElement;
+    private svgTextAccidental: SVGTextElement;
+    private svgRest: SVGTextElement;
 
     constructor(public x: number, public pitch: Pitch) {
-        this.svgCircle = Drawing.circle(this.x, this.y, Layout.NOTERADIUS);
-        this.svtTextAccidental = Drawing.text(this.x - Layout.NOTERADIUS * 2, this.y + Layout.NOTERADIUS / 2, accidentalToSymbol(this.accidental));
-
-        (<any>this.svgCircle).note = this;
+        this.domElement = Drawing.note(this.x, this.y, Layout.NOTERADIUS);
+        this.svgTextAccidental = Drawing.text(this.x - Layout.NOTERADIUS * 2, this.y + Layout.NOTERADIUS / 2, accidentalToSymbol(this.accidental));
+        this.svgRest = Drawing.text(this.x, this.y + Layout.NOTERADIUS, "");
+        this.svgRest.classList.add("rest");
+        this.svgRest.style.visibility = "hidden";
+        (<any>this.domElement).note = this;
     };
 
     draw() {
-        document.getElementById("svg").appendChild(this.svgCircle);
-        document.getElementById("svg").appendChild(this.svtTextAccidental);
+        document.getElementById("svg").appendChild(this.domElement);
+        document.getElementById("svg").appendChild(this.svgTextAccidental);
+        document.getElementById("svg").appendChild(this.svgRest);
     }
 
     /**
@@ -67,13 +71,13 @@ export class Note {
      */
     toggle() {
         this.silence = !this.silence;
-        this.svtTextAccidental.style.visibility = this.silence ? "hidden" : "visible";
+        this.svgTextAccidental.style.visibility = this.silence ? "hidden" : "visible";
+        this.svgRest.style.visibility = this.silence ? "visible" : "hidden";
 
-
-        if (this.svgCircle.classList.contains("silence"))
-            this.svgCircle.classList.remove("silence");
+        if (this.domElement.classList.contains("silence"))
+            this.domElement.classList.remove("silence");
         else
-            this.svgCircle.classList.add("silence")
+            this.domElement.classList.add("silence")
     }
 
     isSilence(): boolean {
@@ -81,28 +85,41 @@ export class Note {
     }
 
     set duration(d) {
+        function durationToRestSymbol(d) {
+            if (d >= 1) return "𝄻";
+            if (d >= 0.5) return "𝄼";
+            if (d >= 0.25) return "𝄽";
+            if (d >= 0.25 / 2) return "𝄾";
+            if (d >= 0.25 / 4) return "𝄿";
+            return "𝅀";
+        }
+
+        this.svgRest.textContent = durationToRestSymbol(d);
+
         if (this.isSilence()) {
-            this.svgCircle.setAttribute('fill', this.color);
+            this.domElement.setAttribute('fill', this.color);
         }
         else {
             if (d < 0.5) {
-                this.svgCircle.setAttribute('stroke', "black");
-                this.svgCircle.setAttribute('fill', this.color);
+                this.domElement.setAttribute('stroke', "black");
+                this.domElement.setAttribute('fill', this.color);
             }
             else {
-                this.svgCircle.setAttribute('fill', "white");
-                this.svgCircle.setAttribute('stroke', this.color);
+                this.domElement.setAttribute('fill', "white");
+                this.domElement.setAttribute('stroke', this.color);
             }
         }
     }
 
     update(x: number, pitch: Pitch) {
         this.x = x, this.pitch = pitch;
-        this.svgCircle.setAttribute('cx', x.toString());
-        this.svgCircle.setAttribute('cy', this.y.toString());
-        this.svtTextAccidental.setAttribute('x', (this.x - Layout.NOTERADIUS * 2).toString());
-        this.svtTextAccidental.setAttribute('y', (this.y + Layout.NOTERADIUS / 2).toString());
-        this.svtTextAccidental.textContent = accidentalToSymbol(this.accidental);
+        this.domElement.setAttribute('cx', x.toString());
+        this.domElement.setAttribute('cy', this.y.toString());
+        this.svgTextAccidental.setAttribute('x', (this.x - Layout.NOTERADIUS * 2).toString());
+        this.svgTextAccidental.setAttribute('y', (this.y + Layout.NOTERADIUS / 2).toString());
+        this.svgRest.setAttribute('x', (this.x).toString());
+        this.svgRest.setAttribute('y', (this.y + Layout.NOTERADIUS).toString());
+        this.svgTextAccidental.textContent = accidentalToSymbol(this.accidental);
     }
 
     get y() { return Layout.getY(this.pitch); }

@@ -16,16 +16,37 @@ svg {
 }
 
 
-circle {
+#svg-wrapper div div {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
+.note {
 	stroke-width: 3px;
 	cursor: pointer;
 }
 
 
+
+.eighth {
+	position: absolute;
+	background-image: url("./img/eighth.svg");
+	width: 16px;
+	height:32px;
+	background-size: 16px 32px;
+}
+
 text {
 	font-size: 28px;
 	pointer-events: none;
 }
+
+.rest {
+	font-size: 48px;
+	text-anchor: middle;
+}
+
 
 @keyframes pulse {
 	from {
@@ -44,7 +65,7 @@ text {
 	}
 }
 
-circle:hover {
+.note:hover {
 	stroke-width: 7px;
 }
 
@@ -64,6 +85,7 @@ circle:hover {
 }
 
 .silence {
+	fill: white;
 	stroke: rgb(219, 219, 219);
 	opacity: 0.3;
 }
