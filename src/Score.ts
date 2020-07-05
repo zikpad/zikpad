@@ -60,7 +60,7 @@ function drawLines() {
     }
 
     //measure lines
-    for (let t = 0; t < 30; t++) {
+    for (let t = 1; t < 30; t++) {
         let x = Layout.getX(t) - 2 * Layout.NOTERADIUS;
         Drawing.line(x, Layout.getY(-10), x, Layout.getY(10));
     }

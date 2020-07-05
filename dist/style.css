@@ -7,7 +7,7 @@ svg {
 
 #svg-wrapper {
 	overflow-x: scroll;
-	overflow-y: hidden;
+	overflow-y: auto;
 }
 
 
