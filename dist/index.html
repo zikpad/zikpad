@@ -10,8 +10,8 @@
 
 <body>
 
-  <div id="svg-wrapper">
-    <div>
+  <div id="container">
+    <div id="content">
       <svg id="svg"></svg>
       <div id="data"></div>
       <div>
@@ -19,9 +19,8 @@
         <button class="btn" id="accidentalUp" title="Accidental Up"><i class="fa fa-arrow-circle-up"></i></button>
         <button class="btn" id="accidentalDown" title="Accidental Down"><i class="fa fa-arrow-circle-down"></i></button>
         <button class="btn" id="toggle" title="toggle selected notes into silence"><i class="fa fa-heart"></i></button>
+        <canvas width=32 height=32 id="microphoneInput" title=""></canvas>
       </div>
-      <canvas width=32 height=32 id="microphoneInput" title=""></canvas>
-      
     </div>
   </div>
 

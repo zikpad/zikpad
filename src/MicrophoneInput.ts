@@ -4,11 +4,14 @@ export class MicrophoneInput {
     public onError: any = undefined;
     public onNoSound: any = undefined;
 
-    readonly FFT_SIZE = 2048;
-    readonly BUFF_SIZE = 2048;
-    readonly TRESHOLDCOUNT = 6;
+    readonly FFT_SIZE = 2048 * 2;
+    readonly BUFF_SIZE = 2048 * 2;
+    readonly TRESHOLDCOUNT = 2;
+    readonly THRESHOLDVOLUME = 300;
+    readonly THRESHOLDPEEKVOLUME = 10;
+    readonly THESHOLDNBPEEKS = 30; //more peeks = noise
 
-    currentfreq = 0;
+    currentfreq = undefined;
     fftcount = 0;
 
     private _started: boolean = false;
@@ -20,9 +23,6 @@ export class MicrophoneInput {
     script_processor_fft_node = null;
     analyserNode = null;
     private _isActive: boolean;
-
-
-
 
     constructor() {
     }
@@ -157,14 +157,22 @@ export class MicrophoneInput {
      */
     private getMainFrequency(spectrum) {
         let SPECTRUMFACTOR = 32;
-        const THRESHOLD = 600;
+
+        function getSpectrumMax(spectrum: [number]) {
+            let max = 0;
+            for (let i = 1; i < spectrum.length / 2; i++)
+                max = Math.max(max, spectrum[i]);
+            return max;
+        }
 
         function getPeeksAndClean(spectrum): Peek[] {
             let peeks = [];
             let peekseval = [];
 
+            const max = getSpectrumMax(spectrum);
+
             for (let i = 1; i < spectrum.length / 2; i++) {
-                if (spectrum[i - 1] <= spectrum[i] && spectrum[i] <= spectrum[i + 1] && spectrum[i] > 0) {
+                if (spectrum[i - 1] <= spectrum[i] && spectrum[i] <= spectrum[i + 1] && spectrum[i] > max / 2) {
                     peeks.push(new Peek(i * SPECTRUMFACTOR));
                 }
             }
@@ -188,7 +196,7 @@ export class MicrophoneInput {
             this.onNoSound();
             return undefined;
         }
-            
+
 
         function findPeek(spectrum, freq) {
             let i = Math.round(freq / SPECTRUMFACTOR);
@@ -234,24 +242,47 @@ export class MicrophoneInput {
             }
         }
 
-        let freq = peeks[jmax].freqFond;
+        let nbBigpeeks = 0;
+        for (let j = 0; j < peeks.length; j++) {
+            if (j != jmax) {
+                if (peeks[j].mark > peeks[jmax].mark * 0.7)
+                    nbBigpeeks += peeks[j].mark / peeks[jmax].mark;
 
+            }
+        }
+
+        let frequencyFound = peeks[jmax].freqFondamental;
+
+
+        document.getElementById("message").innerHTML = "" + nbBigpeeks;
+        if (max <= this.THRESHOLDVOLUME || nbBigpeeks > this.THESHOLDNBPEEKS) {
+            this.onNoSound();
+            frequencyFound = undefined;
+        }
 
 
         // document.getElementById("message").innerHTML = `force: ${max} freq: ${Math.round(freq)} count: ${this.fftcount}`;
 
-        if (max > THRESHOLD && Math.abs(this.currentfreq - freq) < 30) {
-            this.fftcount++;
+
+
+        if (frequencyFound) {
+            if (this.currentfreq && (Math.abs(this.currentfreq - frequencyFound) < 30)) {
+                this.fftcount++;
+                this.currentfreq = 0.5 * this.currentfreq + 0.5 * frequencyFound;
+            }
+            else {
+                this.currentfreq = frequencyFound;
+                this.fftcount = 0;
+            }
+
             this.onSound(this.currentfreq);
-            this.currentfreq = 0.5 * this.currentfreq + 0.5 * freq;
         }
         else {
-            this.currentfreq = freq;
+            this.currentfreq = undefined;
             this.fftcount = 0;
         }
 
-        if (max <= THRESHOLD)
-            this.onNoSound();
+
 
         if (this.fftcount >= this.TRESHOLDCOUNT)
             return this.currentfreq
@@ -260,13 +291,18 @@ export class MicrophoneInput {
 
 
 
+
+    private isSingingNewNote() {
+        return this.fftcount == this.TRESHOLDCOUNT;
+    }
+
     private findNote(spectrum) {
         let freq = this.getMainFrequency(spectrum);
         if (freq == undefined || freq < 50) {
         }
-        else {
+        else if (this.isSingingNewNote()) {
             this.onNote(freq);
-            this.fftcount = 0; //note has been detected, counter reset to 0
+            //  this.fftcount = 0; //note has been detected, counter reset to 0
         }
     }
 
@@ -279,7 +315,7 @@ class Peek {
     public divFond: number = 1;
     public mark: number;
 
-    get freqFond(): number {
+    get freqFondamental(): number {
         return this.freq / this.divFond;
     }
     constructor(freq: number) {

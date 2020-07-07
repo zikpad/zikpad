@@ -52,13 +52,11 @@ export class Analyzer {
         }
 
         for (let timeStep of this.voice.timeSteps) {
-
             if (!timeStep.isSilence()) {
                 if (timeStep.duration < 1)
                     Drawing.line(timeStep.xLine, timeStep.yDown, timeStep.xLine, timeStep.yRythm);
 
                 drawRythmLine(timeStep);
-
             }
 
             if (timeStep.isDot())

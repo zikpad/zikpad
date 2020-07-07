@@ -5,18 +5,23 @@ svg {
 
 
 
-#svg-wrapper {
+#container {
 	overflow-x: scroll;
 	overflow-y: auto;
+
 }
 
 
-#svg-wrapper div {
+
+
+#content {
 	position: relative;
+	transform-origin: 0% 0% 0px;
+	transform-style: flat;
 }
 
 
-#svg-wrapper div div {
+#container div div {
 	position: absolute;
 	left: 0px;
 	top: 0px;
@@ -192,6 +197,7 @@ input {
 	left: 20px;
 	top: 10px;
 }
+
 
 #recordMicrophoneButton {
 	left: 70px;

@@ -1,6 +1,7 @@
 import { Drawing } from './Drawing.js';
 import { Score } from './Score.js';
 import { Note } from './Note.js';
+import { Layout } from './Layout.js';
 
 /**
  * handle the selection
@@ -8,7 +9,7 @@ import { Note } from './Note.js';
 export class InteractionSelection {
 
     private readonly score: Score;
-    private readonly evtBegin: MouseEvent;
+    private readonly pointBegin: {x: number, y: number};
     private svgRectangle: SVGRectElement = undefined;
 
     private x: number;
@@ -18,7 +19,7 @@ export class InteractionSelection {
 
     constructor(score: Score, evt: MouseEvent) {
         this.score = score;
-        this.evtBegin = evt;
+        this.pointBegin = Layout.clientToXY(evt);
         this.svgRectangle = undefined;
 
     }
@@ -26,20 +27,20 @@ export class InteractionSelection {
 
     mouseMove(evt: MouseEvent) {
         const THRESHOLD = 4;
-
+        let p = Layout.clientToXY(evt);
         //if there is no rectangle but the mouse moved enough then setup a rectangle
         if ((this.svgRectangle == undefined) &&
-            ((Math.abs(evt.clientX - this.evtBegin.clientX) > THRESHOLD) || (Math.abs(evt.clientY - this.evtBegin.clientY) > THRESHOLD))) {
+            ((Math.abs(p.x - this.pointBegin.x) > THRESHOLD) || (Math.abs(p.y - this.pointBegin.y) > THRESHOLD))) {
             this.svgRectangle = Drawing.rectangle(0, 0, 0, 0);
             this.svgRectangle.classList.add("selectionRectangle");
         }
 
 
         if (this.svgRectangle) {
-            let x1 = Math.min(this.evtBegin.clientX, evt.clientX) + 1 * document.getElementById("svg-wrapper").scrollLeft;
-            let y1 = Math.min(this.evtBegin.clientY, evt.clientY);
-            let x2 = Math.max(this.evtBegin.clientX, evt.clientX) + 1 * document.getElementById("svg-wrapper").scrollLeft;
-            let y2 = Math.max(this.evtBegin.clientY, evt.clientY);
+            let x1 = Math.min(this.pointBegin.x, p.x) + Layout.xLeftScreen;
+            let y1 = Math.min(this.pointBegin.y, p.y);
+            let x2 = Math.max(this.pointBegin.x, p.x) + Layout.xLeftScreen;
+            let y2 = Math.max(this.pointBegin.y, p.y);
 
             this.x = x1;
             this.y = y1;

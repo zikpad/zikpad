@@ -22,8 +22,21 @@ export class Drawing {
     }
 
 
+
+    static ellipse(x, y, rx, ry) {
+        let aCircle = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        aCircle.setAttribute('cx', x);
+        aCircle.setAttribute('cy', y);
+        aCircle.setAttribute('rx', rx);
+        aCircle.setAttribute('ry', ry);
+        aCircle.setAttribute('stroke', "black");
+        aCircle.setAttribute('stroke-width', "1");
+        document.getElementById("svg").appendChild(aCircle);
+        return aCircle;
+    }
+
     static note(x, y, r) {
-        let element = Drawing.circle(x, y, r);
+        let element = Drawing.ellipse(x, y, r, r);
         element.classList.add("note");
         return element;
     }
@@ -77,7 +90,7 @@ export class Drawing {
     }
 
     static brisureX(x: number) {
-        var e = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        const e = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
         const W = 8;
         const H = 50;
 

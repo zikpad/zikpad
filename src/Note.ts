@@ -47,7 +47,7 @@ export class Note {
 
 
 
-    public domElement: SVGCircleElement;
+    public domElement: SVGElement;
     private svgTextAccidental: SVGTextElement;
     private svgRest: SVGTextElement;
 
