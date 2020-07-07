@@ -21,9 +21,11 @@ export class Player {
     }
 
     _loop() {
+        let tempo = parseInt((<HTMLInputElement>document.getElementById("tempo")).value);
 
-        const WINDOW = 0.001;
-        const DELAYMS = 2000 * WINDOW;
+        const DELAYMS = 50;
+        const WINDOW = ((tempo / 60) * 1000 / DELAYMS) / 1000;
+        
         if (this.stopped) {
             for (let i in this.score.voices)
                 this.sounds[i].stop();
