@@ -94,7 +94,7 @@ export class InteractionScore {
             let b = document.createElement("button");
             b.classList.add("voiceButton");
             b.title = "write in voice n°" + i;
-            b.innerHTML = "voice n°" + i;
+          //  b.innerHTML = "voice n°" + i;
             b.style.backgroundColor = Voice.voiceColors[i];
             b.onclick = () => {
                 this.currentVoice = score.voices[i];

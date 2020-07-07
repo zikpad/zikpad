@@ -107,7 +107,15 @@ text {
 
 #lilypondPalette {
 	visibility: hidden;
+	display: none;
 }
+
+
+#tempo {
+	width: 128px;
+	color: black;
+}
+
 
 .silence:hover {
 	stroke: rgb(163, 226, 255);
@@ -182,11 +190,12 @@ input {
 
 
 .voiceButton {
-	width: 64px;
-	height: 64px;
+	width: 32px;
+	height: 32px;
 	border: none;
 	padding: 12px 16px;
 	font-size: 16px;
+	border-radius: 16px;
 	color: white;
 	cursor: pointer;
 }
