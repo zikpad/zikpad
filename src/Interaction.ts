@@ -109,7 +109,7 @@ export class InteractionScore {
         }
 
 
-
+        document.getElementById("time").onchange = () => this.askUpdate();
 
         const keysSelect = document.getElementById("keys") as HTMLSelectElement;
         keysSelect.innerHTML = "";

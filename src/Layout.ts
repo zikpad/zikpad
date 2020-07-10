@@ -65,6 +65,6 @@ export class Layout {
     }
 
     static adaptZoom() {
-        Layout.zoom = Math.min(1, document.getElementById("container").clientHeight / 800);
+        Layout.zoom = Math.min(2, document.getElementById("container").clientHeight / 800);
     }
 }

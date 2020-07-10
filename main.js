@@ -6,7 +6,7 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron')
 const fs = require('fs');
 
-const DEBUGMODE = true;
+const DEBUGMODE = false;
 
 let win = null;
 let filename = undefined;

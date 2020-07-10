@@ -60,7 +60,12 @@ export class Voice {
             && equalReal(this.timeSteps[i + 2].duration, 0.25 / 3);
     }
 
-
+    /**
+     * 
+     * @param x 
+     * @param pitch 
+     * @returns true if there is a note at abscisse x and at pitch pitch
+     */
     contains(x, pitch: Pitch): boolean {
         for (let note of this.notes) {
             if (Math.abs(note.x - x) < 2 && (note.pitch.accidental == pitch.accidental) && (note.pitch.value == pitch.value))

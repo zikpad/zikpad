@@ -34,7 +34,7 @@ function init() {
 
   window.onresize = resize;
 
-  resize();
+  setTimeout(resize, 100);
 
   document.getElementById("downloadLilypond").style.visibility = "hidden";
 

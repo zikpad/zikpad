@@ -2,6 +2,7 @@ import { Drawing } from './Drawing.js';
 import { Layout } from './Layout.js';
 import { Voice } from './Voice.js';
 import { Note } from './Note.js';
+import { Time } from './Time.js';
 
 export class Score {
 
@@ -61,7 +62,8 @@ function drawLines() {
     }
 
     //measure lines
-    for (let t = 1; t < 30; t++) {
+    const measureDuration = Time.getMeasureDuration();
+    for (let t = measureDuration; t < 30; t+=measureDuration) {
         let x = Layout.getX(t) - 2 * Layout.NOTERADIUS;
         Drawing.line(x, Layout.getY(-10), x, Layout.getY(10));
     }
@@ -89,9 +91,5 @@ function newRect(x1, y1, x2, y2) {
     aRect.setAttribute('fill', "white");
     return aRect;
 }
-
-
-
-
 
 
