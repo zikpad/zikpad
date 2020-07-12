@@ -12,6 +12,7 @@ import { Layout } from "./src/Layout.js";
 
 window.onload = init;
 
+
 /**
  * when the window is resized
  */
@@ -19,27 +20,16 @@ function resize() {
   let screenHeight = (window.innerHeight - document.getElementById("palette").clientHeight - 16);
   document.getElementById("container").style.height =
     screenHeight.toString();
-    Layout.adaptZoom();
+  Layout.adaptZoom();
 }
 
 let score = new Score();
 let interactionScore;
 
-function init() {
-  score = new Score();
-  document.getElementById("svg").setAttribute("height", Layout.HEIGHT.toString());
-  document.getElementById("lilypond").addEventListener("click", () =>
-    (<HTMLInputElement>document.getElementById("lilypond")).select());
-  interactionScore = new InteractionScore(score);
 
-  window.onresize = resize;
 
-  setTimeout(resize, 100);
-
-  document.getElementById("downloadLilypond").style.visibility = "hidden";
-
+function setup() {
   try {
-    Layout.zoom = 0.5;
 
     /** setting when desktop app*/
     const ipc = require('electron').ipcRenderer;
@@ -56,8 +46,10 @@ function init() {
     ipc.on("redo", () => interactionScore.redo());
 
     new OpenFileDragDrop((file: File) => {
-      ipc.send("open",(<any> file).path);
+      ipc.send("open", (<any>file).path);
     });
+
+    document.getElementById("downloadLilypond").style.visibility = "hidden";
 
   }
   catch (e) {
@@ -92,6 +84,39 @@ function init() {
     });
 
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function init() {
+
+  window.onresize = resize;
+  resize();
+  setTimeout(resize, 50);
+  setup();
+  score = new Score();
+  document.getElementById("svg").setAttribute("height", Layout.HEIGHT.toString());
+  document.getElementById("lilypond").addEventListener("click", () =>
+    (<HTMLInputElement>document.getElementById("lilypond")).select());
+  interactionScore = new InteractionScore(score);
+
+
+  //document.getElementById("downloadLilypond").style.visibility = "hidden";
+
+
 
 }
 

@@ -21,16 +21,22 @@ export class Score {
 
     _draw() {
         clear();
-        for (let voice of this.voices) voice.draw();
+
+        drawExtraLines();
         drawLandMark();
+
+        for (let voice of this.voices) voice.draw();
         drawLines();
     }
 
     update() {
         clear();
+
+        drawExtraLines();
+        drawLandMark();
         for (let voice of this.voices) voice.update();
         drawLines();
-        drawLandMark();
+        
     }
 }
 
@@ -42,13 +48,20 @@ function clear() {
 }
 
 
-function drawLines() {
+
+
+function drawExtraLines() {
     //extra lines
     for (let i of [-20, -18, -16, -14, -12, 0, 12, 14, 16, 18, 20]) {
         let y = Layout.getY(i);
         Drawing.lineLight(0, y, Layout.WIDTH, y);
     }
 
+}
+
+
+
+function drawLines() {
     //treble staff
     for (let i of [2, 4, 6, 8, 10]) {
         let y = Layout.getY(i);
@@ -63,7 +76,7 @@ function drawLines() {
 
     //measure lines
     const measureDuration = Time.getMeasureDuration();
-    for (let t = measureDuration; t < 30; t+=measureDuration) {
+    for (let t = measureDuration; t < 30; t += measureDuration) {
         let x = Layout.getX(t) - 2 * Layout.NOTERADIUS;
         Drawing.line(x, Layout.getY(-10), x, Layout.getY(10));
     }
