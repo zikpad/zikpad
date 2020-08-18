@@ -17,6 +17,7 @@ import { Pitch } from './Pitch.js';
 import { CommandGroup } from './CommandGroup.js';
 import { CommandChangeVoiceNote } from './CommandChangeVoiceNote.js';
 import { CommandDeleteNote } from './CommandDeleteNote.js';
+import { InteractionPhantomNote } from './InteractionPhantomNote.js';
 
 
 
@@ -198,7 +199,7 @@ export class InteractionScore {
         let command = new CommandGroup();
         for (let note of this.selection)
             command.push(new CommandToggleNote(note));
-        this.do(command);
+        this.doKeepMenu(command);
     }
 
 
@@ -318,6 +319,8 @@ export class InteractionScore {
     }
 
     drag(evt: MouseEvent) {
+        InteractionPhantomNote.move(evt.x, evt.y, this.currentVoice);
+
         this.dragOccurred = true;
 
         if (this.interactionInsertTime.isActive) {
@@ -418,8 +421,8 @@ export class InteractionScore {
                 this.selection = new Set();
             else if (!this.interactionRecordingMicrophone.isActive()) {
                 let p = Layout.clientToXY(evt);
-                let note = new Note(p.x + document.getElementById("container").scrollLeft,
-                    Harmony.accidentalize(new Pitch(Layout.getPitchValue(p.y), 0), this.key));
+                let note = new Note(p.x + Layout.xLeftScreen,
+                    Harmony.accidentalize(new Pitch(Layout.getPitchValue(p.y + Layout.yLeftScreen), 0), this.key));
                 this.do(new CommandAddNote(this.currentVoice, note));
             }
             ContextualMenu.hide();

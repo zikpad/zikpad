@@ -3,6 +3,14 @@ svg {
 }
 
 
+line {
+	pointer-events: none;
+}
+
+input {
+	width: 500px;
+	color: orange;
+}
 
 
 #container {
@@ -121,14 +129,6 @@ text {
 	stroke: rgb(163, 226, 255);
 }
 
-line {
-	pointer-events: none;
-}
-
-input {
-	width: 500px;
-	color: orange;
-}
 
 
 
@@ -190,17 +190,24 @@ input {
 
 
 .voiceButton {
+	border: 1px solid white;
 	width: 32px;
 	height: 32px;
-	border: none;
 	padding: 12px 16px;
 	font-size: 16px;
 	border-radius: 16px;
-	color: white;
+	background: white;
 	cursor: pointer;
 }
 
+.voiceButton:hover {
+	border: solid 1px black;
+}
 
+
+.voiceButton:checked {
+	border: solid 2px black;
+}
 
 #playButton {
 	left: 20px;
@@ -251,4 +258,9 @@ polyline {
 	stroke: rgb(44, 192, 218);
 	stroke-width: 4px;
 	pointer-events: none;
+}
+
+
+.phantomNote {
+	opacity: 0.2;
 }

@@ -59,6 +59,10 @@ export class Layout {
         return document.getElementById("container").scrollLeft / Layout._zoom;
     }
 
+    static get yLeftScreen() {
+        return document.getElementById("container").scrollTop / Layout._zoom;
+    }
+
 
     static set xLeftScreen(x: number) {
         document.getElementById("container").scrollLeft = x * Layout._zoom;

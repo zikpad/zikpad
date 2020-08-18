@@ -34,9 +34,9 @@ export class Lilypond {
         if (s.length == 0)
             return -7;
         else if (s[0] == "'")
-            return  - 7 + 7 * s.length;
+            return - 7 + 7 * s.length;
         else if (s[0] == ",")
-            return  - 7 - 7 * s.length;
+            return - 7 - 7 * s.length;
 
         throw "lilyOctaveShiftToNumber: I do not understand " + s;
     }
@@ -115,7 +115,7 @@ export class Lilypond {
                 lines.push(`%ZIKPAD voice ${i}`);
                 for (let note of score.voices[i].notes) {
                     if (note.isSilence())
-                        lines.push(`%ZIKPAD ${note.x} ${note.pitchName} silence`)
+                        lines.push(`%ZIKPAD ${note.x} ${note.pitch.lilypondName} silence`)
                     else
                         lines.push(`%ZIKPAD ${note.x} ${note.pitchName}`)
                 }

@@ -1,4 +1,4 @@
-import { Voice } from './Voice';
+import { Voice } from './Voice.js';
 import { Pitch } from './Pitch.js';
 import { Layout } from "./Layout.js";
 import { Drawing } from "./Drawing.js";

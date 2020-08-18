@@ -24,7 +24,10 @@ export class Voice {
         }
     }
 
-    static voiceColors = ["black", "red", "brown", "orange", "green"];
+    static voiceColors = ["black", "DarkSlateGrey", "gray",  "lightgray", 
+    "red", "orange", "DarkOrange", "GoldenRod", 
+    "brown", "Maroon", "Peru", "SaddleBrown",
+    "Pink", "RosyBrown", "SandyBrown", "Thistle"];
 
     notes: Note[] = [];
     timeSteps: TimeStep[] = [];
