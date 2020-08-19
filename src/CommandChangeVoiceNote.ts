@@ -4,7 +4,7 @@ import { Note } from './Note.js';
 
 export class CommandChangeVoiceNote {
 
-    private previousVoice;
+    private  previousVoice;
 
 
     constructor(private note: Note, private voice: Voice) {

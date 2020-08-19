@@ -24,7 +24,7 @@ import { InteractionPhantomNote } from './InteractionPhantomNote.js';
 
 export class InteractionScore {
 
-    private undoRedo = new UndoRedo();
+    private readonly undoRedo = new UndoRedo();
     private selection: Set<Note> = new Set();
 
     private currentVoice: Voice;
@@ -185,8 +185,8 @@ export class InteractionScore {
 
 
     actionDelete() {
-        let command = new CommandGroup();
-        for (let note of this.selection)
+        const command = new CommandGroup();
+        for (const note of this.selection)
             command.push(new CommandDeleteNote(note));
         this.do(command);
         this.selection = new Set();
@@ -196,8 +196,8 @@ export class InteractionScore {
 
 
     actionToggle() {
-        let command = new CommandGroup();
-        for (let note of this.selection)
+        const command = new CommandGroup();
+        for (const note of this.selection)
             command.push(new CommandToggleNote(note));
         this.doKeepMenu(command);
     }
@@ -212,8 +212,8 @@ export class InteractionScore {
     }
 
     actionAccidentalDown() {
-        let command = new CommandGroup();
-        for (let note of this.selection)
+        const command = new CommandGroup();
+        for (const note of this.selection)
             command.push(new CommandUpdateNote(note, note.x, new Pitch(note.pitch.value, Math.max(-2, note.accidental - 1))));
         this.doKeepMenu(command);
     }
@@ -225,9 +225,9 @@ export class InteractionScore {
     }
 
     setup() {
-        let circles = document.getElementsByClassName("note");
+        const circles = document.getElementsByClassName("note");
         for (let i = 0; i < circles.length; i++) {
-            let circle = <HTMLElement> circles[i];
+            const circle = <HTMLElement> circles[i];
             circle.classList.remove("selection");
             circle.onmousedown = (evt) => this.startDrag(evt);
             circle.onmousemove = (evt) => this.drag(evt);
@@ -235,7 +235,7 @@ export class InteractionScore {
         }
 
         if (this.selection.size >= 1)
-            for (let note of this.selection) {
+            for (const note of this.selection) {
                 note.domElement.classList.add("selection");
                 this.interactionRecordingMicrophone.x = note.x;
             }
@@ -300,9 +300,9 @@ export class InteractionScore {
 
 
     getOffset(evt, selection: Set<Note>) {
-        let r = new Map();
-        for (let note of selection) {
-            let p = Layout.clientToXY(evt);
+        const r = new Map();
+        for (const note of selection) {
+            const p = Layout.clientToXY(evt);
             p.x -= parseFloat(note.domElement.getAttributeNS(null, "cx"));
             p.y -= parseFloat(note.domElement.getAttributeNS(null, "cy"));
             r.set(note, p);
