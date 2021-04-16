@@ -7,8 +7,8 @@ Zikpad is an open-source project to write music. The tool automatically detects 
 
 # Videos
 
-  <iframe width="420" height="315" src="https://www.youtube.com/embed/IHud0x0stS4"></iframe>
-  <iframe width="420" height="315" src="https://www.youtube.com/embed/82VYIJCKCSk"></iframe>
+- https://www.youtube.com/embed/IHud0x0stS4
+- https://www.youtube.com/embed/82VYIJCKCSk
 
 
   
