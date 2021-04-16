@@ -1,6 +1,6 @@
 # Zikpad
 
-Zikpad is an open-source project to write music. The tool automatically detects the rhythm. It saves Lilypond files. 
+Zikpad (https://zikpad.github.io/) is an open-source project to write music. The tool automatically detects the rhythm. It saves Lilypond files. 
 
 
 ![Screenshot](./screenshot.png)
@@ -30,10 +30,6 @@ Zikpad is an open-source project to write music. The tool automatically detects 
 - Insert time (Shift + mouse)
 
 
-
-# Online version
-
-You may try the tool here: https://zikpad.github.io/
 
 # Local installation and Compile
 
