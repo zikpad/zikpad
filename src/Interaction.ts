@@ -18,6 +18,7 @@ import { CommandGroup } from './CommandGroup.js';
 import { CommandChangeVoiceNote } from './CommandChangeVoiceNote.js';
 import { CommandDeleteNote } from './CommandDeleteNote.js';
 import { InteractionPhantomNote } from './InteractionPhantomNote.js';
+import { MIDIInput } from './MidiInput.js';
 
 
 
@@ -87,6 +88,12 @@ export class InteractionScore {
         };
 
 
+        MIDIInput.onNoteOn = (midiPitch, velocity) => {
+            let pitch = Harmony.midiPitchToPitch(midiPitch);
+            pitch = Harmony.enharmonic(pitch, this.key);
+            this.do(new CommandAddNote(this.currentVoice, new Note(this.interactionRecordingMicrophone.x, pitch)));
+        };
+
         this.currentVoice = this.score.voices[0];
         score.update();
 
@@ -95,7 +102,7 @@ export class InteractionScore {
             let b = document.createElement("button");
             b.classList.add("voiceButton");
             b.title = "write in voice n°" + i;
-          //  b.innerHTML = "voice n°" + i;
+            //  b.innerHTML = "voice n°" + i;
             b.style.backgroundColor = Voice.voiceColors[i];
             b.onclick = () => {
                 this.currentVoice = score.voices[i];
@@ -157,7 +164,7 @@ export class InteractionScore {
                     this.player.onPlayingLoop = (t) => {
                         this.interactionRecordingMicrophone.x = Layout.getX(t);
                     };
-                  //  this.interactionRecordingMicrophone.pause();
+                    //  this.interactionRecordingMicrophone.pause();
                     icon.classList.add("fa-stop");
                     icon.classList.remove("fa-play");
                 }
@@ -227,7 +234,7 @@ export class InteractionScore {
     setup() {
         const circles = document.getElementsByClassName("note");
         for (let i = 0; i < circles.length; i++) {
-            const circle = <HTMLElement> circles[i];
+            const circle = <HTMLElement>circles[i];
             circle.classList.remove("selection");
             circle.onmousedown = (evt) => this.startDrag(evt);
             circle.onmousemove = (evt) => this.drag(evt);

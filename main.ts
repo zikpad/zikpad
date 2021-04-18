@@ -1,3 +1,4 @@
+import { MIDIInput } from './src/MidiInput.js';
 /**
  * This file will be transformed in the main.js included in dist/index.html
  */
@@ -30,6 +31,9 @@ let interactionScore;
 
 function setup() {
   try {
+    MIDIInput.init();
+
+
 
     /** setting when desktop app*/
     const ipc = require('electron').ipcRenderer;

@@ -1,6 +1,8 @@
 import { Pitch } from './Pitch.js';
 
 
+
+const MIDISHIFT = 12*2+6;
 export class Harmony {
     /**
      * 
@@ -12,7 +14,7 @@ export class Harmony {
         const midiPitch = 2 + Math.round(Math.log2(Math.pow(frequency * Math.pow(2, 1 / 30) / FREQBASE, 12)));
         //* Math.pow(2, 1/30) => for making the frequency higher
 
-        return Harmony.midiPitchToPitch(midiPitch);
+        return Harmony.midiPitchToPitch(midiPitch+MIDISHIFT);
 
     }
 
@@ -24,6 +26,7 @@ export class Harmony {
  * @returns the pitch that corresponds to midiPitch (in the key C major)
  */
     static midiPitchToPitch(midiPitch: number) {
+        midiPitch = midiPitch - MIDISHIFT;
         let octave = Math.floor(midiPitch / 12);
 
         let midiPitchM = midiPitch % 12;

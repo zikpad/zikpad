@@ -1,5 +1,7 @@
 svg {
 	width: 20000px;
+	display:none;
+	scale: 0.2;
 }
 
 
