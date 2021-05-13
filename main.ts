@@ -109,7 +109,7 @@ function init() {
 
   window.onresize = resize;
   resize();
-  setTimeout(resize, 50);
+  setTimeout(resize, 200);
   setup();
   score = new Score();
   document.getElementById("svg").setAttribute("height", Layout.HEIGHT.toString());
