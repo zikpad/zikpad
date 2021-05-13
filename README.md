@@ -1,4 +1,6 @@
-# Zikpad
+# <img src="./zikpad_logo.png" height="32px" /> Zikpad
+
+
 
 Zikpad (https://zikpad.github.io/) is an open-source project to write music. The tool automatically detects the rhythm. It saves Lilypond files. 
 
