@@ -20,7 +20,6 @@ function accidentalToSymbol(a: number): AccidentalSymbol {
 
 
 export class Note {
-    private silence: boolean = false;
     public voice: Voice;
 
     color: string = "black";
@@ -51,13 +50,15 @@ export class Note {
     private svgTextAccidental: SVGTextElement;
     private svgRest: SVGTextElement;
 
-    constructor(public x: number, public pitch: Pitch) {
+    constructor(public x: number, public pitch: Pitch, private silence: boolean = false) {
         this.domElement = Drawing.note(this.x, this.y, Layout.NOTERADIUS);
         this.svgTextAccidental = Drawing.text(this.x - Layout.NOTERADIUS * 2, this.y + Layout.NOTERADIUS / 2, accidentalToSymbol(this.accidental));
         this.svgRest = Drawing.text(this.x, this.y + Layout.NOTERADIUS, "");
         this.svgRest.classList.add("rest");
         this.svgRest.style.visibility = "hidden";
         (<any>this.domElement).note = this;
+        if (this.silence)
+            this.updateToggle();
     };
 
     draw() {
@@ -66,11 +67,8 @@ export class Note {
         document.getElementById("svg").appendChild(this.svgRest);
     }
 
-    /**
-     * toggle Silence <-> Not Silence (Real note)
-     */
-    toggle() {
-        this.silence = !this.silence;
+
+    private updateToggle() {
         this.svgTextAccidental.style.visibility = this.silence ? "hidden" : "visible";
         this.svgRest.style.visibility = this.silence ? "visible" : "hidden";
 
@@ -78,6 +76,13 @@ export class Note {
             this.domElement.classList.remove("silence");
         else
             this.domElement.classList.add("silence")
+    }
+    /**
+     * toggle Silence <-> Not Silence (Real note)
+     */
+    toggle() {
+        this.silence = !this.silence;
+        this.updateToggle();
     }
 
     isSilence(): boolean {

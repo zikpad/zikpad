@@ -357,7 +357,7 @@ export class InteractionScore {
                     this.dragCommand = new CommandGroup();
                     let newSelection = [];
                     for (let note of this.selection) {
-                        let newNote = new Note(note.x, note.pitch);
+                        let newNote = new Note(note.x, note.pitch, note.isSilence());
                         newSelection.push(newNote);
                         this.dragCommand.push(new CommandAddNote(note.voice, newNote));
                     }
