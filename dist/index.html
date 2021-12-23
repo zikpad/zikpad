@@ -19,19 +19,20 @@
         <button class="btn" id="accidentalUp" title="Accidental Up"><i class="fa fa-arrow-circle-up"></i></button>
         <button class="btn" id="accidentalDown" title="Accidental Down"><i class="fa fa-arrow-circle-down"></i></button>
         <button class="btn" id="toggle" title="toggle selected notes into silence"><i class="fa fa-heart"></i></button>
-        <canvas width=32 height=32 id="microphoneInput" title=""></canvas>
+        <canvas hidden width=32 height=32 id="microphoneInput" title=""></canvas>
       </div>
     </div>
   </div>
 
-  <button class="btn" id="playButton" title="play"><i class="fa fa-play"></i></button>
-  <button class="btn" id="downloadLilypond" title="Download the score in the lilypond format"><i
-      class="fa fa-download"></i></button>
-  <button class="btn" id="recordMicrophoneButton" title="Click = record via the microphone"><i
-      class="fa fa-microphone-slash"></i></button>
-  <button class="btn" id="stopRecordMicrophoneButton" title="Click = Stop recording via the microphone"><i
-      class="fa fa-microphone"></i></button>
+  
   <div id="palette">
+    <button  id="playButton" title="play"><i class="fa fa-play"></i></button>
+  <button id="downloadLilypond" title="Download the score in the lilypond format"><i
+      class="fa fa-download"></i></button>
+  <button hidden class="btn" id="recordMicrophoneButton" title="Click = record via the microphone"><i
+      class="fa fa-microphone-slash"></i></button>
+  <button hidden class="btn" id="stopRecordMicrophoneButton" title="Click = Stop recording via the microphone"><i
+      class="fa fa-microphone"></i></button>
     <div>
 
       <div id="message"></div>
