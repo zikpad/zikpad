@@ -65,12 +65,12 @@ function setup() {
     };
 
     document.addEventListener("keydown", (evt) => {
-      if (evt.ctrlKey && evt.keyCode == KeyEvent.DOM_VK_Z) {
-        interactionScore.undo();
-      }
-      else if (evt.ctrlKey && evt.shiftKey && evt.keyCode == KeyEvent.DOM_VK_Z) {
+      if (evt.ctrlKey && evt.shiftKey && evt.keyCode == KeyEvent.DOM_VK_Z) {
         interactionScore.redo();
       }
+      else if (evt.ctrlKey && evt.keyCode == KeyEvent.DOM_VK_Z) {
+        interactionScore.undo();
+      } 
     });
 
 
