@@ -228,6 +228,24 @@ export class InteractionScore {
         this.doKeepMenu(command);
     }
 
+
+
+    actionMoveX(dx: number) {
+        const command = new CommandGroup();
+        for (const note of this.selection)
+            command.push(new CommandUpdateNote(note, note.x + dx, note.pitch));
+        this.doKeepMenu(command);
+    }
+
+
+
+    actionMoveY(dy: number) {
+        const command = new CommandGroup();
+        for (const note of this.selection)
+            command.push(new CommandUpdateNote(note, note.x,
+                Harmony.accidentalize(new Pitch(note.pitch.value + dy, 0), this.key)));
+        this.doKeepMenu(command);
+    }
     update() {
         this.score.update();
         this.setup();
@@ -255,9 +273,20 @@ export class InteractionScore {
                 this.actionDelete();
             }
 
-            if(evt.keyCode == KeyEvent.DOM_VK_SPACE) {
+            if (evt.keyCode == KeyEvent.DOM_VK_SPACE) {
                 this.actionToggle();
             }
+
+            if (evt.keyCode == KeyEvent.DOM_VK_LEFT)
+                this.actionMoveX(-10);
+            if (evt.keyCode == KeyEvent.DOM_VK_RIGHT)
+                this.actionMoveX(10);
+
+            if (evt.keyCode == KeyEvent.DOM_VK_UP)
+                this.actionMoveY(1);
+            if (evt.keyCode == KeyEvent.DOM_VK_DOWN)
+                this.actionMoveY(-1);
+
         };
 
         document.getElementById("svgBackground").onmousedown = (evt) => this.mouseDownBackground(evt);
