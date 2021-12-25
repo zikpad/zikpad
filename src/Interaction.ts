@@ -113,9 +113,9 @@ export class InteractionScore {
 
                 this.do(command);
 
-                for (const button of document.getElementsByClassName("voiceButton")) {
+                for (const button of document.getElementsByClassName("voiceButton")) 
                     button.classList.remove("active");
-                }
+                
                 b.classList.add("active");
             }
             if (<any>i == 0)
