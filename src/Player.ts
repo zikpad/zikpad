@@ -1,3 +1,4 @@
+import { Layout } from './Layout.js';
 import { Voice } from './Voice';
 import { Score } from './Score.js';
 import { VoiceSounds } from './Sound.js';
@@ -25,7 +26,7 @@ export class Player {
 
         const DELAYMS = 50;
         const WINDOW = ((tempo / 60) * 1000 / DELAYMS) / 1000;
-        
+
         if (this.stopped) {
             for (let i in this.score.voices)
                 this.sounds[i].stop();
@@ -33,6 +34,11 @@ export class Player {
         };
 
         this.t += WINDOW;
+
+        /** scroll when it plays outside the window */
+        const x = Layout.getX(this.t);
+        if (x > Layout.xRightScreen)
+            Layout.xLeftScreen = x;
 
         for (let i in this.score.voices) {
             let voice = this.score.voices[i];

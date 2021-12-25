@@ -428,6 +428,23 @@ export class InteractionScore {
             evt.preventDefault();
             let coord = Layout.clientToXY(evt);
 
+            const dxshiftScreen=32;
+            if (evt.clientX < 100 &&  Layout.xLeftScreen > dxshiftScreen) {
+                Layout.xLeftScreen -= dxshiftScreen;
+                for(const note of this.offset.keys()) {
+                    this.offset.get(note).x += dxshiftScreen;
+                }
+            }
+                
+
+            if (evt.clientX > window.innerWidth - 100) {
+                Layout.xLeftScreen += dxshiftScreen;
+                for(const note of this.offset.keys()) {
+                    this.offset.get(note).x -= dxshiftScreen;
+                }
+            }
+                
+
             if (this.pasteCommand == undefined) {
 
                 if (evt.ctrlKey) {
