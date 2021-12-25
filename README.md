@@ -2,7 +2,7 @@
 
 
 
-Zikpad (https://zikpad.github.io/) is an open-source project to write music. The tool automatically detects the rhythm. It saves Lilypond files. 
+Zikpad (https://zikpad.github.io/) is an online tool to write and play music scores. The tool automatically detects the rhythm. It saves Lilypond files. 
 
 
 ![Screenshot](./screenshot.png)
@@ -13,7 +13,8 @@ Zikpad (https://zikpad.github.io/) is an open-source project to write music. The
 - https://www.youtube.com/embed/82VYIJCKCSk
 
 
-  
+
+
 # Features
 
 - You add notes by clicking (very simple!)
