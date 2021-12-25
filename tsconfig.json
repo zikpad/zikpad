@@ -10,6 +10,7 @@
     "outDir": "./dist",
     "lib": [
       "dom",
+      "dom.iterable",
       "es2015",
       "es5",
       "es6"

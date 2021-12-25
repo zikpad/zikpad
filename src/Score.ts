@@ -76,7 +76,7 @@ function drawLines() {
 
     //measure lines
     const measureDuration = Time.getMeasureDuration();
-    for (let t = measureDuration; t < 30; t += measureDuration) {
+    for (let t = measureDuration; t < Layout.getT(Layout.WIDTH); t += measureDuration) {
         let x = Layout.getX(t) - 2 * Layout.NOTERADIUS;
         Drawing.line(x, Layout.getY(-10), x, Layout.getY(10));
     }

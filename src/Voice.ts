@@ -24,7 +24,7 @@ export class Voice {
         }
     }
 
-    static voiceColors = ["black", "red", "orange", "green", "blue"] /*["black", "DarkSlateGrey", "gray",  "lightgray", 
+    static voiceColors = ["black", "red", "orange", "green", "blue", "Pink", "SaddleBrown"] /*["black", "DarkSlateGrey", "gray",  "lightgray", 
     "red", "orange", "DarkOrange", "GoldenRod", 
     "brown", "Maroon", "Peru", "SaddleBrown",
     "Pink", "RosyBrown", "SandyBrown", "Thistle"];*/

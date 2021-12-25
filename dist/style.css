@@ -1,5 +1,5 @@
 svg {
-	width: 20000px;
+	width: 50000px;
 }
 
 line {
@@ -208,7 +208,7 @@ button {
 }
 
 
-.voiceButton:checked {
+.voiceButton.active {
 	border: solid 4px black;
 }
 

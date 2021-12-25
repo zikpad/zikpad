@@ -108,11 +108,19 @@ export class InteractionScore {
             b.onclick = () => {
                 this.currentVoice = score.voices[i];
                 let command = new CommandGroup();
-                for (let note of this.selection) {
+                for (let note of this.selection)
                     command.push(new CommandChangeVoiceNote(note, this.currentVoice));
-                }
+
                 this.do(command);
+
+                for (const button of document.getElementsByClassName("voiceButton")) {
+                    button.classList.remove("active");
+                }
+                b.classList.add("active");
             }
+            if (<any>i == 0)
+                b.classList.add("active");
+
             document.getElementById("voiceButtonPalette").appendChild(b);
 
         }
@@ -424,7 +432,13 @@ export class InteractionScore {
 
                 if (evt.ctrlKey) {
                     this.pasteCommand = new CommandGroup();
-                    this.selection = cloneSelection(this.selection);
+                    const newSelection = [];
+                    for (const note of this.selection) {
+                        const newNote = new Note(note.x, note.pitch, note.isSilence());
+                        newSelection.push(newNote);
+                        this.pasteCommand.push(new CommandAddNote(note.voice, newNote));
+                    }
+                    this.selection = new Set(newSelection);
                     this.offset = this.getOffset(evt, this.selection);
                     this.dragCopyMade = true;
 
@@ -514,16 +528,6 @@ export class InteractionScore {
 
 }
 
-
-function cloneSelection(selection: Set<Note>): Set<Note> {
-    const newSelection = [];
-    for (const note of selection) {
-        const newNote = new Note(note.x, note.pitch, note.isSilence());
-        newSelection.push(newNote);
-        this.dragCommand.push(new CommandAddNote(note.voice, newNote));
-    }
-    return new Set(newSelection);
-}
 
 
 

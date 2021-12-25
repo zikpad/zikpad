@@ -5,7 +5,7 @@ export class Layout {
     static readonly NOTERADIUS = 18;
     static readonly NOTERADIUSX = 18;
     static readonly WIDTHONE = 800;
-    static readonly WIDTH = 20000;
+    static readonly WIDTH = 50000;
     static readonly HEIGHT = 800;
     static readonly BASELINE = Layout.HEIGHT * 2 / 4;
     static readonly RYTHMY = -4 * Layout.NOTERADIUS;
