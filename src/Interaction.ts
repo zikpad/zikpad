@@ -26,6 +26,7 @@ import { MIDIInput } from './MidiInput.js';
 export class InteractionScore {
 
     private readonly undoRedo = new UndoRedo();
+    private clipBoard: Set<{ voice: Voice, x: number, pitch: Pitch, silence: boolean }> = new Set();
     private selection: Set<Note> = new Set();
 
     private currentVoice: Voice;
@@ -33,7 +34,7 @@ export class InteractionScore {
     private draggedNote: Note;
     private offset: Map<Note, { x: number, y: number }>;
     private dragOccurred: boolean = false;
-    private dragCommand: CommandGroup = undefined;
+    private pasteCommand: CommandGroup = undefined;
     private x: number = 0;
 
     private updateAsked = false;
@@ -187,10 +188,40 @@ export class InteractionScore {
     }
 
 
+    actionCut() {
+        this.clipBoard = createClipBoard(this.selection);
+        this.actionDelete();
+    }
 
 
+    actionCopy() {
+        this.clipBoard = createClipBoard(this.selection);
+    }
 
 
+    actionPaste() {
+        let xmin = Infinity;
+        for (const noteInfo of this.clipBoard) {
+            xmin = Math.min(xmin, noteInfo.x);
+        }
+
+
+        this.pasteCommand = new CommandGroup();
+
+        const x0 = document.getElementById("container").scrollLeft + 50;
+
+        this.selection = new Set();
+        for (const { voice, x, pitch, silence } of this.clipBoard) {
+            const note = new Note(x - xmin + x0, pitch, silence)
+            this.pasteCommand.push(new CommandAddNote(voice, note));
+            this.selection.add(note);
+        }
+        this.do(this.pasteCommand);
+        this.update();
+    }
+
+
+    /**delete the selection */
     actionDelete() {
         const command = new CommandGroup();
         for (const note of this.selection)
@@ -269,13 +300,13 @@ export class InteractionScore {
             }
 
         document.onkeydown = (evt) => {
-            if (evt.keyCode == KeyEvent.DOM_VK_DELETE) {
+            if (evt.keyCode == KeyEvent.DOM_VK_DELETE)
                 this.actionDelete();
-            }
 
-            if (evt.keyCode == KeyEvent.DOM_VK_SPACE) {
+
+            if (evt.keyCode == KeyEvent.DOM_VK_SPACE)
                 this.actionToggle();
-            }
+
 
             if (evt.keyCode == KeyEvent.DOM_VK_LEFT)
                 this.actionMoveX(-10);
@@ -286,6 +317,15 @@ export class InteractionScore {
                 this.actionMoveY(1);
             if (evt.keyCode == KeyEvent.DOM_VK_DOWN)
                 this.actionMoveY(-1);
+
+            if (evt.ctrlKey && evt.keyCode == KeyEvent.DOM_VK_X)
+                this.actionCut();
+
+            if (evt.ctrlKey && evt.keyCode == KeyEvent.DOM_VK_C)
+                this.actionCopy();
+
+            if (evt.ctrlKey && evt.keyCode == KeyEvent.DOM_VK_V)
+                this.actionPaste();
 
         };
 
@@ -324,7 +364,7 @@ export class InteractionScore {
         this.dragOccurred = false;
         this.dragCopyMade = false;
         this.draggedNote = (<any>evt.target).note;
-        this.dragCommand = undefined;
+        this.pasteCommand = undefined;
 
         if (this.draggedNote && !this.dragOccurred && (!this.selection.has(this.draggedNote))) {
             if (evt.ctrlKey)
@@ -380,39 +420,33 @@ export class InteractionScore {
             evt.preventDefault();
             let coord = Layout.clientToXY(evt);
 
-            if (this.dragCommand == undefined) {
+            if (this.pasteCommand == undefined) {
 
                 if (evt.ctrlKey) {
-                    this.dragCommand = new CommandGroup();
-                    let newSelection = [];
-                    for (let note of this.selection) {
-                        let newNote = new Note(note.x, note.pitch, note.isSilence());
-                        newSelection.push(newNote);
-                        this.dragCommand.push(new CommandAddNote(note.voice, newNote));
-                    }
-                    this.selection = new Set(newSelection);
+                    this.pasteCommand = new CommandGroup();
+                    this.selection = cloneSelection(this.selection);
                     this.offset = this.getOffset(evt, this.selection);
                     this.dragCopyMade = true;
 
                     for (let note of this.selection) {
                         let dx = coord.x - this.offset.get(note).x;
                         let dy = coord.y - this.offset.get(note).y;
-                        this.dragCommand.push(
+                        this.pasteCommand.push(
                             new CommandUpdateNote(note, dx, Harmony.accidentalize(
                                 new Pitch(Layout.getPitchValue(dy), 0), this.key)));
                     }
                 }
                 else {
-                    this.dragCommand = new CommandGroup();
+                    this.pasteCommand = new CommandGroup();
                     for (let note of this.selection) {
                         let dx = coord.x - this.offset.get(note).x;
                         let dy = coord.y - this.offset.get(note).y;
-                        this.dragCommand.push(new CommandUpdateNote(note, dx,
+                        this.pasteCommand.push(new CommandUpdateNote(note, dx,
                             Harmony.accidentalize(new Pitch(Layout.getPitchValue(dy), 0), this.key)));
                     }
                 }
 
-                this.do(this.dragCommand);
+                this.do(this.pasteCommand);
             }
 
 
@@ -423,9 +457,9 @@ export class InteractionScore {
                 let dy = coord.y - this.offset.get(note).y;
 
 
-                let command = (this.dragCommand.size == this.selection.size) ?
-                    this.dragCommand.get(i) :
-                    this.dragCommand.get(this.selection.size + i);
+                let command = (this.pasteCommand.size == this.selection.size) ?
+                    this.pasteCommand.get(i) :
+                    this.pasteCommand.get(this.selection.size + i);
 
                 let pitch = Harmony.accidentalize(new Pitch(Layout.getPitchValue(dy), 0), this.key);
                 note.update(dx, pitch);
@@ -481,3 +515,22 @@ export class InteractionScore {
 }
 
 
+function cloneSelection(selection: Set<Note>): Set<Note> {
+    const newSelection = [];
+    for (const note of selection) {
+        const newNote = new Note(note.x, note.pitch, note.isSilence());
+        newSelection.push(newNote);
+        this.dragCommand.push(new CommandAddNote(note.voice, newNote));
+    }
+    return new Set(newSelection);
+}
+
+
+
+function createClipBoard(selection: Set<Note>): Set<{ voice: Voice, x: number, pitch: Pitch, silence: boolean }> {
+    const newSelection = [];
+    for (const note of selection) {
+        newSelection.push({ voice: note.voice, x: note.x, pitch: note.pitch, silence: note.isSilence() });
+    }
+    return new Set(newSelection);
+}
