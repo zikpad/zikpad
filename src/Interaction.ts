@@ -113,9 +113,9 @@ export class InteractionScore {
 
                 this.do(command);
 
-                for (const button of document.getElementsByClassName("voiceButton")) 
+                for (const button of document.getElementsByClassName("voiceButton"))
                     button.classList.remove("active");
-                
+
                 b.classList.add("active");
             }
             if (<any>i == 0)
@@ -491,6 +491,9 @@ export class InteractionScore {
 
     endDrag(evt) {
 
+        const updateAfterEndDrag = () => {
+
+        }
         if (this.interactionInsertTime.isActive) {
             this.do(this.interactionInsertTime.stop());
         }
@@ -504,6 +507,7 @@ export class InteractionScore {
                 this.selection = new Set(this.interactionSelection.getSelection());
             ContextualMenu.show(this.selection);
             this.interactionSelection = undefined;
+            document.getElementById("svg").style.cursor = "default";
         }
         //click outside a note
         else if (!this.draggedNote &&
@@ -516,8 +520,11 @@ export class InteractionScore {
                     Harmony.accidentalize(new Pitch(Layout.getPitchValue(p.y + Layout.yLeftScreen), 0), this.key));
                 this.do(new CommandAddNote(this.currentVoice, note));
             }
+            document.getElementById("svg").style.cursor = "crosshair";
             ContextualMenu.hide();
         }
+        else //after clicking on a note
+            document.getElementById("svg").style.cursor = "default";
 
 
         this.interactionSelection = null;

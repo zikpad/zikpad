@@ -36,7 +36,7 @@ input {
 
 .note {
 	stroke-width: 3px;
-	cursor: pointer;
+	cursor: grab;
 }
 
 
