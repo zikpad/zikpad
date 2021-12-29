@@ -15,9 +15,7 @@ export class CommandGroup implements Command {
         return this.commands[i];
     }
 
-    get size() {
-        return this.commands.length;
-    }
+    get size() { return this.commands.length; }
 
     do() {
         for (let i = 0; i < this.commands.length; i++)

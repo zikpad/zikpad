@@ -20,8 +20,9 @@ export class Analyzer {
      * @param timeSteps an array of timeSteps. Each timestep is a collection of notes played at the same time.
      */
     computeTime(timeSteps: TimeStep[]) {
-        function getEndByDefault(t) { 
-            return Time.getMeasureNumber(t) * Time.getMeasureDuration()  + Time.getMeasureDuration(); }
+        function getEndByDefault(t) {
+            return Time.getMeasureNumber(t) * Time.getMeasureDuration() + Time.getMeasureDuration();
+        }
 
         for (let ts of timeSteps)
             ts.t = Layout.getT(ts.x);
@@ -65,6 +66,17 @@ export class Analyzer {
                 for (let note of timeStep.notes)
                     Drawing.circle(note.x + Layout.NOTERADIUS * 3 / 2, note.y, 3);
 
+
+            if (timeStep.isDoubleDot()) {
+                for (let note of timeStep.notes) {
+                    Drawing.circle(note.x + Layout.NOTERADIUS * 3 / 2, note.y, 3);
+                    Drawing.circle(note.x + Layout.NOTERADIUS * 3 / 2 + 8, note.y, 3);
+                }
+                console.log("double dot")
+            }
+
+
+
         }
 
         for (let i = 0; i < this.voice.timeSteps.length; i++) {
@@ -99,25 +111,36 @@ export class Analyzer {
 /**
  * 
  * @param dt 
- * @returns the real duration corresponding to dt. (E.g. if dt == 1, returns 1 (whole note
+ * @returns the real duration corresponding to dt. (E.g. if dt == 1, returns 1 (whole note)
  * if dt is almost 1/2, returns 1/2 etc.)
  */
 function getDuration(dt: number): number {
     let score = 1000000;
     let result = 1;
 
-    function test(v) {
-        let newScore = Math.abs(v - dt);
+    function test(v: number): void {
+        const newScore = Math.abs(v - dt);
         if (newScore < score) {
             result = v;
             score = newScore;
         }
     }
 
-    let possibleValues = [0.25 / 4, 0.25 / 3, 0.25 / 2, 0.25, 0.5, 0.75, 0.25 / 3, 1, 0.75 / 2, 0.75 / 4];
+    let possibleValues = [0.25 / 4,
+    0.25 / 3,
+    0.25 / 2,
+        0.25,
+        0.5,
+        0.75,
+        0.875,
+    0.25 / 3,
+        1,
+    0.75 / 2,
+    0.875 / 2,
+    0.875 / 4,
+    0.75 / 4];
 
-    for (let v of possibleValues)
-        test(v);
+    for (const v of possibleValues) test(v);
 
 
     return result;
