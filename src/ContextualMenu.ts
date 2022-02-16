@@ -16,7 +16,6 @@ export class ContextualMenu {
     }
 
     static show(selection: Set<Note>) {
-
         let x1 = 100000;
         let y1 = 100000;
         let x2 = -1000;

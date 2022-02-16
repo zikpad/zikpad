@@ -487,7 +487,6 @@ export class InteractionScore {
                 let dx = coord.x - this.offset.get(note).x;
                 let dy = coord.y - this.offset.get(note).y;
 
-
                 let command = (this.pasteCommand.size == this.selection.size) ?
                     this.pasteCommand.get(i) :
                     this.pasteCommand.get(this.selection.size + i);
@@ -498,9 +497,7 @@ export class InteractionScore {
                 i++;
             }
 
-
-
-            ContextualMenu.hide();
+            ContextualMenu.show(this.selection);
             this.askUpdate();
         }
     }
@@ -541,7 +538,11 @@ export class InteractionScore {
             ContextualMenu.hide();
         }
         else //after clicking on a note
+        {
             document.getElementById("svg").style.cursor = "default";
+         
+        }
+            
 
 
         this.interactionSelection = null;
