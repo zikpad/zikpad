@@ -33,7 +33,7 @@ function setup() {
   try {
     MIDIInput.init();
 
-
+    document.getElementById("clef").oninput = () => interactionScore.update();
 
     /** setting when desktop app*/
     const ipc = require('electron').ipcRenderer;

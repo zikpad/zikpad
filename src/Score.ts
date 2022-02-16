@@ -3,11 +3,12 @@ import { Layout } from './Layout.js';
 import { Voice } from './Voice.js';
 import { Note } from './Note.js';
 import { Time } from './Time.js';
+import { System } from './System.js';
 
 export class Score {
 
     voices: Voice[] = [];
-
+    
 
     constructor() {
         for (let c of Voice.voiceColors)
@@ -26,7 +27,7 @@ export class Score {
         drawLandMark();
 
         for (let voice of this.voices) voice.draw();
-        drawLines();
+        System.drawLines();
     }
 
     update() {
@@ -35,7 +36,7 @@ export class Score {
         drawExtraLines();
         drawLandMark();
         for (let voice of this.voices) voice.update();
-        drawLines();
+        System.drawLines();
         
     }
 }
@@ -52,7 +53,7 @@ function clear() {
 
 function drawExtraLines() {
     //extra lines
-    for (let i of [-20, -18, -16, -14, -12, 0, 12, 14, 16, 18, 20]) {
+    for (let i = -20; i<=20; i+=2) {
         let y = Layout.getY(i);
         Drawing.lineLight(0, y, Layout.WIDTH, y);
     }
@@ -61,27 +62,6 @@ function drawExtraLines() {
 
 
 
-function drawLines() {
-    //treble staff
-    for (let i of [2, 4, 6, 8, 10]) {
-        let y = Layout.getY(i);
-        Drawing.line(0, y, Layout.WIDTH, y);
-    }
-
-    //bass staff
-    for (let i of [-2, -4, -6, -8, -10]) {
-        let y = Layout.getY(i);
-        Drawing.line(0, y, Layout.WIDTH, y);
-    }
-
-    //measure lines
-    const measureDuration = Time.getMeasureDuration();
-    for (let t = measureDuration; t < Layout.getT(Layout.WIDTH); t += measureDuration) {
-        let x = Layout.getX(t) - 2 * Layout.NOTERADIUS;
-        Drawing.line(x, Layout.getY(-10), x, Layout.getY(10));
-    }
-
-}
 
 /**
  * draw small vertical lines for landmarks for the beats

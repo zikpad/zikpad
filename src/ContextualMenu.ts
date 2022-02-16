@@ -21,7 +21,7 @@ export class ContextualMenu {
         let x2 = -1000;
         let y2 = -1000;
 
-        for (let note of selection) {
+        for (const note of selection) {
             x1 = Math.min(note.x - Layout.NOTERADIUS, x1);
             x2 = Math.max(note.x + Layout.NOTERADIUS, x2);
             y1 = Math.min(note.y - Layout.NOTERADIUS, y1);

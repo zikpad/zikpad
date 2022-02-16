@@ -2,6 +2,7 @@ import { Drawing } from './Drawing.js';
 import { Voice, TimeStep } from "./Voice.js";
 import { Layout } from "./Layout.js";
 import { Time } from './Time.js';
+import { System } from './System.js';
 
 /**
  * this class analyses a voice and infers the rhythm.
@@ -85,20 +86,10 @@ export class Analyzer {
                     this.voice.timeSteps[i].yRythm - 2, "3");
         }
 
-        let drawExtraLine = (x: number, i: number) => {
-            const y = Layout.getY(i);
-            const FACT = 1.8;
-            Drawing.line(x - Layout.NOTERADIUS * FACT, y, x + Layout.NOTERADIUS * FACT, y);
-        }
 
-        for (let note of this.voice.notes) if (!note.isSilence()) {
-            if (note.pitch.value == 0)
-                drawExtraLine(note.x, 0);
-            for (let i = -10; i >= note.pitch.value; i -= 2)
-                drawExtraLine(note.x, i);
-            for (let i = 10; i <= note.pitch.value; i += 2)
-                drawExtraLine(note.x, i);
-        }
+        for (let note of this.voice.notes) if (!note.isSilence()) 
+            System.drawExtraLines(note.x, note.pitch.value);
+        
 
     }
 
