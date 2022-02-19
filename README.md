@@ -1,8 +1,8 @@
-# <img src="./zikpad_logo.png" height="32px" /> Zikpad
+<p align="center"><a href="https://github.com/zikpad/zikpad"><img src="./zikpad_logo.png" alt="Zikpad logo" height="32"/></a></p>
+<h1 align="center">Zikpad</h1>
+<p align="center">https://zikpad.github.io: the most simple music score editor.</p>
 
-
-
-Zikpad (https://zikpad.github.io/) is an online tool to write and play music scores. The tool automatically detects the rhythm. It saves Lilypond files. 
+Contrary to many other music score editor, the rythm is infered. It saves Lilypond files. Thus, it makes a tool for teaching music, write inventions, etc.
 
 
 ![Screenshot](./screenshot.png)
