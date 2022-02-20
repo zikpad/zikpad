@@ -33,6 +33,20 @@ export class Analyzer {
                 timeSteps[i].duration = getDuration(timeSteps[i + 1].t - timeSteps[i].t);
             else
                 timeSteps[i].duration = getDuration(getEndByDefault(timeSteps[i].t) - timeSteps[i].t);
+
+        }
+
+        for(let i=0; i<timeSteps.length; i++) {
+            let d = Infinity;
+            if(i>0)
+                d = timeSteps[i-1].duration;
+
+            d = Math.min(d, timeSteps[i].duration);
+
+            for (const note of timeSteps[i].notes) {
+                note.adaptRX(d);
+            }
+
         }
     }
 
@@ -46,13 +60,18 @@ export class Analyzer {
             if (timeStep.duration >= 0.25)
                 return;
 
-            Drawing.lineRythm(timeStep.xLine, timeStep.yRythm, timeStep.xLine + Layout.RYTHMX, timeStep.yRythm);
+            for (let i = 0; i < 4; i++) {
+                const YSHIFT = i * Layout.RYTHMLINESSEP;
+                Drawing.lineRythm(timeStep.xLine, timeStep.yRythm + YSHIFT, timeStep.xLine + Layout.RYTHMX, timeStep.yRythm + YSHIFT);
+                if (timeStep.duration >= 0.25 / (2 ** (i+1))) return;
+            }
 
-            if (timeStep.duration > 0.25 / 4) return;
-
-            Drawing.lineRythm(timeStep.xLine, timeStep.yRythm + Layout.RYTHMLINESSEP, timeStep.xLine + Layout.RYTHMX, timeStep.yRythm + Layout.RYTHMLINESSEP);
-
-            if (timeStep.duration > 0.25 / 8) return;
+            /*
+                        if (timeStep.duration > 0.25 / 4) return;
+            
+                        Drawing.lineRythm(timeStep.xLine, timeStep.yRythm + Layout.RYTHMLINESSEP, timeStep.xLine + Layout.RYTHMX, timeStep.yRythm + Layout.RYTHMLINESSEP);
+            
+                        if (timeStep.duration > 0.25 / 8) return;*/
         }
 
         for (let timeStep of this.voice.timeSteps) {
@@ -87,9 +106,9 @@ export class Analyzer {
         }
 
 
-        for (let note of this.voice.notes) if (!note.isSilence()) 
+        for (let note of this.voice.notes) if (!note.isSilence())
             System.drawExtraLines(note.x, note.pitch.value);
-        
+
 
     }
 
@@ -132,8 +151,9 @@ function getDuration(dt: number): number {
     0.75 / 4];
 
     for (const v of possibleValues) test(v);
-
-
+    for (const v of possibleValues) test(v/2);
+    for (const v of possibleValues) test(v/4);
+    for (const v of possibleValues) test(v/8);
     return result;
 }
 

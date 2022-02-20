@@ -89,6 +89,24 @@ export class Note {
         return this.silence;
     }
 
+
+    /**
+     * 
+     * @returns the X radius that depends on the duration
+     */
+    rx(): number { return parseInt(this.domElement.getAttribute("rx")) }
+
+    adaptRX(d) {
+        function durationToRX(d) {
+            const quarterquarter = 0.25 / 4;
+            if (d >= quarterquarter)
+                return Layout.NOTERADIUS;
+            else
+                return Math.max(4, Layout.NOTERADIUS * d / quarterquarter);
+
+        }
+        this.domElement.setAttribute("rx", "" + durationToRX(d));
+    }
     set duration(d) {
         function durationToRestSymbol(d) {
             if (d >= 1) return "𝄻";

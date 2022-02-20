@@ -1,6 +1,15 @@
+body {
+	overflow: hidden;
+	margin:0px;	
+}
+
 svg {
 	width: 50000px;
+	padding: 0px;
+	margin:0px;
+	position:absolute;
 }
+
 
 line {
 	pointer-events: none;
@@ -15,7 +24,8 @@ input {
 #container {
 	overflow-x: scroll;
 	overflow-y: auto;
-
+	margin: 0px;
+	padding:0px;
 }
 
 
