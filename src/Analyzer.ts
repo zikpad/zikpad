@@ -63,7 +63,7 @@ export class Analyzer {
             for (let i = 0; i < 4; i++) {
                 const YSHIFT = i * Layout.RYTHMLINESSEP;
                 Drawing.lineRythm(timeStep.xLine, timeStep.yRythm + YSHIFT, timeStep.xLine + Layout.RYTHMX, timeStep.yRythm + YSHIFT);
-                if (timeStep.duration >= 0.25 / (2 ** (i+1))) return;
+                if (timeStep.duration > 0.25 / (2 ** (i+2))) return;
             }
 
             /*

@@ -190,6 +190,8 @@ export class InteractionScore {
         document.getElementById("delete").onclick = () => { this.actionDelete(); };
         document.getElementById("toggle").onclick = () => { this.actionToggle(); };
         document.getElementById("accidentalUp").onclick = () => { this.actionAccidentalUp(); };
+        
+        document.getElementById("uniformizeDurations").onclick = () => { this.actionDurationUniformize(); };
         document.getElementById("accidentalDown").onclick = () => { this.actionAccidentalDown(); };
         {
             const buttonScaleX = document.getElementById("scalex");
@@ -283,7 +285,7 @@ export class InteractionScore {
     actionScaleX(delta) {
         const command = new CommandGroup();
         const x0 = Math.min(...Array.from(this.selection).map((note) => note.x));
-        const ARF = 1000;
+        const ARF = 500;
         const f = (ARF + delta) / ARF;
         for (const note of this.selection) {
             command.push(new CommandUpdateNote(note, x0 + (note.x - x0) * f, note.pitch));

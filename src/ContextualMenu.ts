@@ -53,6 +53,11 @@ export class ContextualMenu {
                 document.getElementById("scalex").style.visibility = "visible";
                 setPosition("scalex", x2 + MENURADIUS + MENURADIUS, y1);
 
+                if (selection.size > 2) {
+                    document.getElementById("uniformizeDurations").style.visibility = "visible";
+                    setPosition("uniformizeDurations", x2 + MENURADIUS + MENURADIUS, y1 - MENURADIUS);
+                }
+                    
             }
         }
     }
@@ -64,5 +69,7 @@ export class ContextualMenu {
         document.getElementById("accidentalDown").style.visibility = "hidden";
         document.getElementById("delete").style.visibility = "hidden";
         document.getElementById("scalex").style.visibility = "hidden";
+        document.getElementById("uniformizeDurations").style.visibility = "hidden";
+
     }
 }
