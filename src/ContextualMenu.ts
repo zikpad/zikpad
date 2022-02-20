@@ -33,12 +33,8 @@ export class ContextualMenu {
             document.getElementById(btnName).style.top = "" + y;
         }
 
-        if (selection.size == 0) {
-            document.getElementById("toggle").style.visibility = "hidden";
-            document.getElementById("accidentalUp").style.visibility = "hidden";
-            document.getElementById("accidentalDown").style.visibility = "hidden";
-            document.getElementById("delete").style.visibility = "hidden";
-        }
+        if (selection.size == 0)
+            this.hide();
         else {
             document.getElementById("toggle").style.visibility = "visible";
             document.getElementById("delete").style.visibility = "visible";
@@ -50,9 +46,13 @@ export class ContextualMenu {
             if (selection.size == 1) {
                 document.getElementById("accidentalUp").style.visibility = "visible";
                 document.getElementById("accidentalDown").style.visibility = "visible";
-                
+
                 setPosition("accidentalUp", x1 - Layout.NOTERADIUS - MENURADIUS, y1 - MENURADIUS);
                 setPosition("accidentalDown", x1 - Layout.NOTERADIUS - MENURADIUS, y1 + MENURADIUS);
+            } else {
+                document.getElementById("scalex").style.visibility = "visible";
+                setPosition("scalex", x2 + MENURADIUS + MENURADIUS, y1);
+
             }
         }
     }
@@ -63,5 +63,6 @@ export class ContextualMenu {
         document.getElementById("accidentalUp").style.visibility = "hidden";
         document.getElementById("accidentalDown").style.visibility = "hidden";
         document.getElementById("delete").style.visibility = "hidden";
+        document.getElementById("scalex").style.visibility = "hidden";
     }
 }
