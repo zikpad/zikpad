@@ -2,6 +2,15 @@ import { Layout } from './Layout.js';
 import { Voice } from './Voice';
 import { Score } from './Score.js';
 import { VoiceSounds } from './Sound.js';
+import { Drawing } from './Drawing.js';
+
+
+
+function metronomePulse() {
+    const playButton = document.getElementById("playButton");
+    playButton.style.backgroundColor = "black";
+    setTimeout(() => playButton.style.backgroundColor = null, 50);
+}
 
 export class Player {
     onPlayingLoop = undefined;
@@ -11,12 +20,15 @@ export class Player {
     private stopped = false;
     private t: number;
     private sounds: VoiceSounds[] = [];
+    private line: SVGLineElement = undefined;
 
     constructor(score: Score, startingTime: number) {
         this.score = score;
         this.t = startingTime;
         for (let i in this.score.voices)
             this.sounds[i] = new VoiceSounds();
+
+        this.line = Drawing.line(0, -100, 0, 1000);
 
         this._loop();
     }
@@ -32,6 +44,10 @@ export class Player {
                 this.sounds[i].stop();
             return;
         };
+
+        const beepEVERY = 0.25;
+        if (Math.floor(this.t / beepEVERY) != Math.floor((this.t + WINDOW) / beepEVERY))
+            metronomePulse();
 
         this.t += WINDOW;
 
@@ -56,6 +72,10 @@ export class Player {
         if (this.onPlayingLoop)
             this.onPlayingLoop(this.t);
 
+        document.getElementById("svg").append(this.line);
+        this.line.setAttribute("x1", "" + Layout.getX(this.t));
+        this.line.setAttribute("x2", "" + Layout.getX(this.t));
+
         setTimeout(() => this._loop(), DELAYMS);
     }
 
@@ -67,6 +87,8 @@ export class Player {
             noteElements[i].classList.remove("played");
         }
         this.stopped = true;
+
+        this.line.remove();
     }
 
 

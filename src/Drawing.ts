@@ -57,7 +57,7 @@ export class Drawing {
     }
 
     static line(x1, y1, x2, y2) {
-        var aLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        const aLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         aLine.setAttribute('x1', x1);
         aLine.setAttribute('y1', y1);
         aLine.setAttribute('x2', x2);

@@ -46,7 +46,7 @@ function onMIDIMessage(event) {
 	// pressure / tilt on
 	// pressure: 176, cmd 11: 
 	// bend: 224, cmd: 14
-	// log('MIDI data', data);
+	 console.log('MIDI data', data);
 	switch (type) {
 		case 144: // noteOn message 
 			MIDIInput.onNoteOn(note, velocity);

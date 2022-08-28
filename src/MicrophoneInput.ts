@@ -35,18 +35,8 @@ export class MicrophoneInput {
         console.log("audio is starting up ...");
 
 
-
-
-        (<any>navigator).getUserMedia = navigator.getUserMedia || (<any>navigator).webkitGetUserMedia || (<any>navigator).mozGetUserMedia;
-
-
-        if (navigator.getUserMedia) {
-            navigator.getUserMedia({ audio: true },
-                function (stream) { startMicrophone(stream); },
-                function (e) { alert('Error capturing audio.'); }
-            );
-
-        } else { if (this.onError) this.onError(); }
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => { startMicrophone(stream); })
+            .catch((e) => { alert('Error capturing audio.'); });
 
 
         let startMicrophone = (stream) => {
