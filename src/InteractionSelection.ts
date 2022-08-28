@@ -37,10 +37,10 @@ export class InteractionSelection {
 
 
         if (this.svgRectangle) {
-            let x1 = Math.min(this.pointBegin.x, p.x) + Layout.xLeftScreen;
-            let y1 = Math.min(this.pointBegin.y, p.y) + Layout.yLeftScreen;
-            let x2 = Math.max(this.pointBegin.x, p.x) + Layout.xLeftScreen;
-            let y2 = Math.max(this.pointBegin.y, p.y) + Layout.yLeftScreen;
+            let x1 = Math.min(this.pointBegin.x, p.x);
+            let y1 = Math.min(this.pointBegin.y, p.y);
+            let x2 = Math.max(this.pointBegin.x, p.x);
+            let y2 = Math.max(this.pointBegin.y, p.y);
 
             this.x = x1;
             this.y = y1;

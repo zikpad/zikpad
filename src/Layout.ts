@@ -41,7 +41,7 @@ export class Layout {
 
 
     static clientToXY(evt: MouseEvent): { x: number, y: number } {
-        return { x: evt.clientX / Layout._zoom, y: evt.clientY / Layout._zoom };
+        return { x: evt.clientX / Layout._zoom + Layout.xLeftScreen, y: evt.clientY / Layout._zoom + Layout.yLeftScreen };
     }
 
 

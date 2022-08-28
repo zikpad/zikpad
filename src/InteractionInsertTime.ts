@@ -14,41 +14,43 @@ import { Note } from './Note.js';
  */
 export class InteractionInsertTime {
 
-    private x: number = undefined;
-    private x2: number;
-    private notes: Note[] = [];
+    private xRef: number = undefined;
+    private xCurrent: number;
+    private notesAfter: Note[] = [];
 
     constructor(private score: Score, private undoredo: UndoRedo) { }
 
     start(x: number) {
-        this.x = x;
-        this.x2 = x;
+        this.xRef = x;
+        this.xCurrent = x;
         Drawing.brisureX(x);
 
-        for (let voice of this.score.voices)
-            for (let note of voice.notes) {
-                if (note.x > x)
-                    this.notes.push(note);
+        for (const voice of this.score.voices)
+            for (const note of voice.notes) {
+                if (note.x > this.xRef)
+                    this.notesAfter.push(note);
             }
     }
 
 
     move(x: number) {
-        if (x > this.x) {
-            const dx = x - this.x2;
-            for (let note of this.notes)
+        if (x > this.xRef) {
+            const dx = x - this.xCurrent;
+            for (let note of this.notesAfter)
                 note.update(note.x + dx, note.pitch);
         }
-        this.x2 = x;
+        this.xCurrent = x;
     }
 
 
 
     draw() {
-        Drawing.brisureX(this.x);
-        Drawing.brisureX(this.x2);
-        if (this.x2 < this.x) {
-            const r = Drawing.rectangle(this.x2, 0, this.x - this.x2, Layout.HEIGHT);
+        Drawing.brisureX(this.xRef);
+        Drawing.brisureX(this.xCurrent);
+
+        //draw a gray rectangle that shows the portion of the score that will be deleted
+        if (this.xCurrent < this.xRef) {
+            const r = Drawing.rectangle(this.xCurrent, 0, this.xRef - this.xCurrent, Layout.HEIGHT);
             r.classList.add("delete");
         }
 
@@ -59,10 +61,10 @@ export class InteractionInsertTime {
         const command = new CommandGroup();
 
         //insert
-        if (this.x < this.x2) {
-            const dx = (this.x2 - this.x);
+        if (this.xRef < this.xCurrent) {
+            const dx = (this.xCurrent - this.xRef);
             //go back temporary to the initial state 
-            for (let note of this.notes) {
+            for (let note of this.notesAfter) {
                 note.update(note.x - dx, note.pitch);
                 command.push(new CommandUpdateNote(note, note.x + dx, note.pitch));
             }
@@ -70,19 +72,19 @@ export class InteractionInsertTime {
         }
         else {
             //delete the portions between this.x2 and this.x
-            
-            const dx = (this.x - this.x2);
+
+            const dx = (this.xRef - this.xCurrent);
             for (let voice of this.score.voices)
                 for (let note of voice.notes) {
-                    if (note.x > this.x) {
+                    if (note.x > this.xRef) {
                         command.push(new CommandUpdateNote(note, note.x - dx, note.pitch));
-                    } else if (this.x2 < note.x && note.x < this.x) {
+                    } else if (this.xCurrent < note.x && note.x < this.xRef) {
                         command.push(new CommandDeleteNote(note));
                     }
                 }
 
         }
-        this.x = undefined;
+        this.xRef = undefined;
         return command;
     }
 
@@ -90,7 +92,5 @@ export class InteractionInsertTime {
 
 
 
-    get isActive() {
-        return (this.x != undefined);
-    }
+    get isActive() { return (this.xRef != undefined); }
 }

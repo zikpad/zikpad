@@ -190,7 +190,7 @@ export class InteractionScore {
         document.getElementById("delete").onclick = () => { this.actionDelete(); };
         document.getElementById("toggle").onclick = () => { this.actionToggle(); };
         document.getElementById("accidentalUp").onclick = () => { this.actionAccidentalUp(); };
-        
+
         document.getElementById("uniformizeDurations").onclick = () => { this.actionDurationUniformize(); };
         document.getElementById("accidentalDown").onclick = () => { this.actionAccidentalDown(); };
         {
@@ -273,9 +273,9 @@ export class InteractionScore {
         if (x2 - x1 <= 0)
             return;
 
-        for (let i =0; i<notes.length; i++) {
+        for (let i = 0; i < notes.length; i++) {
             const note = notes[i];
-            command.push(new CommandUpdateNote(note, x1 + i * (x2 - x1) / (notes.length-1), note.pitch));
+            command.push(new CommandUpdateNote(note, x1 + i * (x2 - x1) / (notes.length - 1), note.pitch));
         }
         this.doKeepMenu(command);
     }
@@ -587,8 +587,8 @@ export class InteractionScore {
                 this.selection = new Set();
             else if (this.interactionRecordingMicrophone == undefined || !this.interactionRecordingMicrophone.isActive()) {
                 let p = Layout.clientToXY(evt);
-                let note = new Note(p.x + Layout.xLeftScreen,
-                    Harmony.accidentalize(new Pitch(Layout.getPitchValue(p.y + Layout.yLeftScreen), 0), this.key));
+                let note = new Note(p.x,
+                    Harmony.accidentalize(new Pitch(Layout.getPitchValue(p.y), 0), this.key));
                 this.do(new CommandAddNote(this.currentVoice, note));
             }
             document.getElementById("svg").style.cursor = "crosshair";
