@@ -3,10 +3,27 @@ import { Layout } from "./Layout.js";
 import { Time } from "./Time.js";
 
 export class System {
-
-    static drawExtraLines(x: number, pitchValue: number) {
+    /**
+    * 
+    * @param x 
+    * @param i 
+    * @description draw the extra lines for a note at x and pitch i
+    * 
+    *      --o--
+    *      ----- <= extraline
+    */
+    static drawHorizontalSmallExtraLines(x: number, pitchValue: number) {
         const v = (<HTMLSelectElement>document.getElementById("clef")).value;
 
+        /**
+         * 
+         * @param x 
+         * @param i 
+         * @description draw an extra line for a note at x and pitch i
+         * 
+         *      --o--
+         *      ----- <= extraline
+         */
         let drawExtraLine = (x: number, i: number) => {
             const y = Layout.getY(i);
             const FACT = 1.8;
@@ -34,7 +51,11 @@ export class System {
 
     }
 
-    static drawLines() {
+
+    /**
+     * @description the horizontal lines
+     */
+    static drawHorizontalLines() {
         const v = (<HTMLSelectElement>document.getElementById("clef")).value;
         //treble staff
 
@@ -54,23 +75,6 @@ export class System {
         if (v.indexOf("𝄡") >= 0)
             drawFiveLinesAround(0);
 
-        function getYs() {
-            switch (v) {
-                case "𝄞": return [2, 10];
-                case "𝄢": return [-10, -2];
-                case "𝄞𝄢": return [-10, 10];
-                case "𝄡": return [-4, 4];
-            }
-        }
-
-
-        //measure lines
-        const measureDuration = Time.getMeasureDuration();
-        const ys = getYs();
-        for (let t = measureDuration; t < Layout.getT(Layout.WIDTH); t += measureDuration) {
-            let x = Layout.getX(t) - 2 * Layout.NOTERADIUS;
-            Drawing.line(x, Layout.getY(ys[0]), x, Layout.getY(ys[1]));
-        }
 
     }
 }

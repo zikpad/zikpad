@@ -41,7 +41,18 @@ export class Drawing {
         return element;
     }
 
-
+    static lineLessLight(x1, y1, x2, y2) {
+        var aLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        aLine.setAttribute('x1', x1);
+        aLine.setAttribute('y1', y1);
+        aLine.setAttribute('x2', x2);
+        aLine.setAttribute('y2', y2);
+        aLine.setAttribute('stroke', "gray");
+        aLine.setAttribute('stroke-width', "1");
+        aLine.addEventListener("mousedown", (evt) => evt.preventDefault());
+        document.getElementById("svg").appendChild(aLine);
+        return aLine;
+    }
 
     static lineLight(x1, y1, x2, y2) {
         var aLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');

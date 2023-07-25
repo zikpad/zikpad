@@ -8,7 +8,7 @@ import { System } from './System.js';
 export class Score {
 
     voices: Voice[] = [];
-    
+
 
     constructor() {
         for (let c of Voice.voiceColors)
@@ -23,21 +23,21 @@ export class Score {
     _draw() {
         clear();
 
-        drawExtraLines();
-        drawLandMark();
+        drawHorizontalExtraLines();
+        drawVerticalLines();
 
         for (let voice of this.voices) voice.draw();
-        System.drawLines();
+        System.drawHorizontalLines();
     }
 
     update() {
         clear();
 
-        drawExtraLines();
-        drawLandMark();
+        drawHorizontalExtraLines();
+        drawVerticalLines();
         for (let voice of this.voices) voice.update();
-        System.drawLines();
-        
+        System.drawHorizontalLines();
+
     }
 }
 
@@ -51,9 +51,9 @@ function clear() {
 
 
 
-function drawExtraLines() {
+function drawHorizontalExtraLines() {
     //extra lines
-    for (let i = -20; i<=20; i+=2) {
+    for (let i = -20; i <= 20; i += 2) {
         let y = Layout.getY(i);
         Drawing.lineLight(0, y, Layout.WIDTH, y);
     }
@@ -64,13 +64,22 @@ function drawExtraLines() {
 
 
 /**
- * draw small vertical lines for landmarks for the beats
+ * draw vertical lines for landmarks for the beats
  */
-function drawLandMark() {
-    for (let t = 0; t < 50; t += 0.25) {
+function drawVerticalLines() {
+    for (let t = 0; t < Layout.getT(Layout.WIDTH); t += 0.25) {
         const x = Layout.getX(t);
+
         Drawing.lineLight(x, 0, x, Layout.LANDMARKHEIGHT);
     }
+
+
+    const measureDuration = Time.getMeasureDuration();
+    for (let t = measureDuration; t < Layout.getT(Layout.WIDTH); t += measureDuration) {
+        const x = Layout.getX(t);
+        Drawing.lineLessLight(x, 0, x, Layout.LANDMARKHEIGHT);
+    }
+
 }
 
 

@@ -107,7 +107,7 @@ export class Analyzer {
 
 
         for (let note of this.voice.notes) if (!note.isSilence())
-            System.drawExtraLines(note.x, note.pitch.value);
+            System.drawHorizontalSmallExtraLines(note.x, note.pitch.value);
 
 
     }
